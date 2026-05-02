@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────
+
+enum Role {
+  MANAGER
+  PROFESSIONAL
+  CLIENT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  NO_SHOW
+  CANCELLED
+}
+
+enum NotificationType {
+  CONFIRMATION
+  REMINDER_24H
+  CANCELLATION
+  RESCHEDULE
+}
+
+enum ImportStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  COMPLETED_WITH_ERRORS
+  FAILED
+}
+
+enum ImportRowStatus {
+  SUCCESS
+  ERROR
+}
+
+// ─── Models ──────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  phone     String?
+  role      Role
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  professional  Professional?
+  customer      Customer?
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Service {
+  id        String   @id @default(uuid())
+  name      String
+  duration  Int      // duration in minutes
+  price     Decimal  @db.Decimal(10, 2)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  professionals ProfessionalService[]
+  appointments  Appointment[]
+
+  @@map("services")
+}
+
+model Professional {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  specialty String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services      ProfessionalService[]
+  workSchedules WorkSchedule[]
+  appointments  Appointment[]
+
+  @@map("professionals")
+}
+
+model ProfessionalService {
+  id             String @id @default(uuid())
+  professionalId String @map("professional_id")
+  serviceId      String @map("service_id")
+
+  professional Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  service      Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([professionalId, serviceId])
+  @@map("professional_services")
+}
+
+model WorkSchedule {
+  id             String @id @default(uuid())
+  professionalId String @map("professional_id")
+  dayOfWeek      Int    @map("day_of_week") // 0=Sunday, 6=Saturday
+  startTime      String @map("start_time")  // "08:00"
+  endTime        String @map("end_time")    // "18:00"
+
+  professional Professional @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+
+  @@unique([professionalId, dayOfWeek, startTime])
+  @@map("work_schedules")
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@map("customers")
+}
+
+model Appointment {
+  id             String            @id @default(uuid())
+  customerId     String            @map("customer_id")
+  professionalId String            @map("professional_id")
+  serviceId      String            @map("service_id")
+  startTime      DateTime          @map("start_time")
+  endTime        DateTime          @map("end_time")
+  status         AppointmentStatus @default(SCHEDULED)
+  notes          String?
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+
+  customer      Customer       @relation(fields: [customerId], references: [id])
+  professional  Professional   @relation(fields: [professionalId], references: [id])
+  service       Service        @relation(fields: [serviceId], references: [id])
+  notifications Notification[]
+
+  @@index([professionalId, startTime])
+  @@index([customerId, startTime])
+  @@index([status])
+  @@map("appointments")
+}
+
+model Notification {
+  id            String           @id @default(uuid())
+  userId        String           @map("user_id")
+  appointmentId String           @map("appointment_id")
+  type          NotificationType
+  sentAt        DateTime?        @map("sent_at")
+  readAt        DateTime?        @map("read_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+
+  user        User        @relation(fields: [userId], references: [id])
+  appointment Appointment @relation(fields: [appointmentId], references: [id])
+
+  @@unique([appointmentId, type])
+  @@map("notifications")
+}
+
+model ImportJob {
+  id          String       @id @default(uuid())
+  fileName    String       @map("file_name")
+  entityType  String       @map("entity_type") // "customers" | "appointments"
+  status      ImportStatus @default(QUEUED)
+  totalRows   Int          @default(0) @map("total_rows")
+  successRows Int          @default(0) @map("success_rows")
+  errorRows   Int          @default(0) @map("error_rows")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  rows ImportJobRow[]
+
+  @@map("import_jobs")
+}
+
+model ImportJobRow {
+  id           String          @id @default(uuid())
+  importJobId  String          @map("import_job_id")
+  rowNumber    Int             @map("row_number")
+  rawData      Json            @map("raw_data")
+  status       ImportRowStatus
+  errorMessage String?         @map("error_message")
+
+  importJob ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+
+  @@map("import_job_rows")
+}
