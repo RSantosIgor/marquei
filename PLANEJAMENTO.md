@@ -98,7 +98,7 @@ Estrutura base do monorepo com frontend, backend e infra Docker pronta para dev 
 
 ---
 
-### Épico 2 — Banco de Dados e Modelagem com Prisma
+### Épico 2 — Banco de Dados e Modelagem com Prisma (Concluído)
 
 #### Objetivo
 Schema Prisma completo, migrations e seeds de desenvolvimento.
@@ -107,25 +107,25 @@ Schema Prisma completo, migrations e seeds de desenvolvimento.
 - Como dev, quero schema versionado com seeds para ter dados de teste consistentes.
 
 #### Tarefas
-- [ ] Instalar Prisma no backend
-- [ ] Criar schema.prisma com todas as entidades e enums (Role, AppointmentStatus, NotificationType, ImportStatus, ImportRowStatus)
-- [ ] Configurar relações e índices
-- [ ] Habilitar extensão btree_gist
-- [ ] Criar exclusion constraint para impedir sobreposição de agendamentos
-- [ ] Gerar e executar migration inicial
-- [ ] Criar PrismaModule e PrismaService no NestJS
-- [ ] Criar seed.ts com dados de exemplo para todos os perfis
-- [ ] Validar schema com prisma validate e prisma generate
+- [x] Instalar Prisma no backend
+- [x] Criar schema.prisma com todas as entidades e enums (Role, AppointmentStatus, NotificationType, ImportStatus, ImportRowStatus)
+- [x] Configurar relações e índices
+- [x] Habilitar extensão btree_gist
+- [x] Criar exclusion constraint para impedir sobreposição de agendamentos
+- [x] Gerar e executar migration inicial
+- [x] Criar PrismaModule e PrismaService no NestJS
+- [x] Criar seed.ts com dados de exemplo para todos os perfis
+- [x] Validar schema com prisma validate e prisma generate
 
 #### Critérios de aceite
-- [ ] Migration roda sem erros em banco limpo
-- [ ] Seed popula dados de todos os perfis
-- [ ] Exclusion constraint impede agendamentos sobrepostos via INSERT direto
-- [ ] PrismaService acessível via DI no NestJS
+- [x] Migration roda sem erros em banco limpo
+- [x] Seed popula dados de todos os perfis
+- [x] Exclusion constraint impede agendamentos sobrepostos via INSERT direto
+- [x] PrismaService acessível via DI no NestJS
 
 ---
 
-### Épico 3 — Autenticação e Autorização
+### Épico 3 — Autenticação e Autorização (Concluído)
 
 #### Objetivo
 Login JWT, registro de clientes e controle de acesso por role.
@@ -136,32 +136,32 @@ Login JWT, registro de clientes e controle de acesso por role.
 - Como gestor, quero que cada perfil veja apenas suas telas.
 
 #### Tarefas
-- [ ] Criar AuthModule (AuthService, AuthController)
-- [ ] POST /auth/register (auto-cadastro de cliente)
-- [ ] POST /auth/login (retorna access + refresh tokens)
-- [ ] POST /auth/refresh (renova access token)
-- [ ] Criar JwtStrategy e JwtAuthGuard
-- [ ] Criar RolesGuard e decorator @Roles()
-- [ ] Criar decorator @Public()
-- [ ] Criar UsersModule com UsersService
-- [ ] Hash de senha com bcrypt
-- [ ] Validação de DTOs com class-validator
-- [ ] Página /login no frontend
-- [ ] Página /register no frontend
-- [ ] Zustand store para auth (token, user, logout)
-- [ ] Interceptor Axios para attach de token e refresh automático
-- [ ] Componente ProtectedRoute no React Router
-- [ ] Redirecionamento por role após login
+- [x] Criar AuthModule (AuthService, AuthController)
+- [x] POST /auth/register (auto-cadastro de cliente)
+- [x] POST /auth/login (retorna access + refresh tokens)
+- [x] POST /auth/refresh (renova access token)
+- [x] Criar JwtStrategy e JwtAuthGuard
+- [x] Criar RolesGuard e decorator @Roles()
+- [x] Criar decorator @Public()
+- [x] Criar UsersModule com UsersService
+- [x] Hash de senha com bcrypt
+- [x] Validação de DTOs com class-validator
+- [x] Página /login no frontend
+- [x] Página /register no frontend
+- [x] Zustand store para auth (token, user, logout)
+- [x] Interceptor Axios para attach de token e refresh automático
+- [x] Componente ProtectedRoute no React Router
+- [x] Redirecionamento por role após login
 
 #### Critérios de aceite
-- [ ] Cliente se cadastra e faz login
-- [ ] Token expirado retorna 401; refresh renova
-- [ ] Rotas protegidas redirecionam para /login sem token
-- [ ] Usuário só acessa rotas do seu perfil
+- [x] Cliente se cadastra e faz login
+- [x] Token expirado retorna 401; refresh renova
+- [x] Rotas protegidas redirecionam para /login sem token
+- [x] Usuário só acessa rotas do seu perfil
 
 ---
 
-### Épico 4 — Cadastros Administrativos
+### Épico 4 — Cadastros Administrativos (Concluído)
 
 #### Objetivo
 CRUD de serviços e clientes pelo gestor.
@@ -171,21 +171,21 @@ CRUD de serviços e clientes pelo gestor.
 - Como gestor, quero listar e editar clientes.
 
 #### Tarefas
-- [ ] Criar ServicesModule com CRUD completo
-- [ ] Endpoints REST /services
-- [ ] Criar CustomersModule com CRUD completo
-- [ ] Endpoints REST /customers
-- [ ] Paginação e busca nos endpoints de listagem
-- [ ] Validação de DTOs
-- [ ] Página /manager/services (tabela, busca, modal CRUD)
-- [ ] Página /manager/customers (tabela, busca, modal CRUD)
-- [ ] Feedback com Toast/Sonner
+- [x] Criar ServicesModule com CRUD completo
+- [x] Endpoints REST /services
+- [x] Criar CustomersModule com CRUD completo
+- [x] Endpoints REST /customers
+- [x] Paginação e busca nos endpoints de listagem
+- [x] Validação de DTOs
+- [x] Página /manager/services (tabela, busca, modal CRUD)
+- [x] Página /manager/customers (tabela, busca, modal CRUD)
+- [x] Feedback com Toast/Sonner
 
 #### Critérios de aceite
-- [ ] Gestor cria, edita e desativa serviços
-- [ ] Gestor lista clientes com paginação e busca
-- [ ] Validações de formulário exibem erros
-- [ ] Apenas gestores acessam essas páginas
+- [x] Gestor cria, edita e desativa serviços
+- [x] Gestor lista clientes com paginação e busca
+- [x] Validações de formulário exibem erros
+- [x] Apenas gestores acessam essas páginas
 
 ---
 

@@ -1,4 +1,6 @@
-FROM node:20-alpine
+FROM node:20-slim
+
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -7,8 +9,11 @@ RUN npm ci
 
 COPY . .
 
-RUN npx prisma generate 2>/dev/null || true
+RUN npx prisma generate
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start:dev"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+CMD ["/entrypoint.sh"]
