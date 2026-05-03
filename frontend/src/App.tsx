@@ -5,8 +5,16 @@ import { LoginPage } from '@/pages/auth/LoginPage'
 import { RegisterPage } from '@/pages/auth/RegisterPage'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { ManagerLayout } from '@/layouts/ManagerLayout'
+import { ProfessionalLayout } from '@/layouts/ProfessionalLayout'
+import { CustomerLayout } from '@/layouts/CustomerLayout'
 import { ServicesPage } from '@/pages/manager/ServicesPage'
 import { CustomersPage } from '@/pages/manager/CustomersPage'
+import { ProfessionalsPage } from '@/pages/manager/ProfessionalsPage'
+import { ManagerAppointmentsPage } from '@/pages/manager/ManagerAppointmentsPage'
+import { ImportsPage } from '@/pages/manager/ImportsPage'
+import { ProfessionalSchedulePage } from '@/pages/professional/ProfessionalSchedulePage'
+import { NewAppointmentPage } from '@/pages/customer/NewAppointmentPage'
+import { MyAppointmentsPage } from '@/pages/customer/MyAppointmentsPage'
 import { useAuthStore } from '@/stores/auth.store'
 import { getRoleRedirect } from '@/lib/role-redirect'
 
@@ -55,18 +63,26 @@ function App() {
               <Route index element={<PlaceholderPage title="Painel do Gestor" />} />
               <Route path="services" element={<ServicesPage />} />
               <Route path="customers" element={<CustomersPage />} />
-              <Route path="appointments" element={<PlaceholderPage title="Agendamentos" />} />
+              <Route path="professionals" element={<ProfessionalsPage />} />
+              <Route path="appointments" element={<ManagerAppointmentsPage />} />
+              <Route path="imports" element={<ImportsPage />} />
             </Route>
           </Route>
 
           {/* Professional routes */}
           <Route element={<ProtectedRoute allowedRoles={['PROFESSIONAL']} />}>
-            <Route path="/professional" element={<PlaceholderPage title="Painel do Profissional" />} />
+            <Route path="/professional" element={<ProfessionalLayout />}>
+              <Route index element={<ProfessionalSchedulePage />} />
+            </Route>
           </Route>
 
           {/* Client routes */}
           <Route element={<ProtectedRoute allowedRoles={['CLIENT']} />}>
-            <Route path="/customer" element={<PlaceholderPage title="Painel do Cliente" />} />
+            <Route path="/customer" element={<CustomerLayout />}>
+              <Route index element={<NewAppointmentPage />} />
+              <Route path="new-appointment" element={<NewAppointmentPage />} />
+              <Route path="appointments" element={<MyAppointmentsPage />} />
+            </Route>
           </Route>
 
           {/* Root redirect */}

@@ -1,5 +1,9 @@
 # Frontend — React + Vite Guidelines
 
+## ⚠️ Observação sobre o alias `@`
+
+O alias `@` nos imports (ex: `@/components/ui/button`) **resolve para `frontend/src/`**, NÃO é uma pasta literal chamada `@`. Quando a CLI do shadcn exibe caminhos como `@\components\ui\button.tsx`, ela está referenciando `frontend/src/components/ui/button.tsx`. Não existe pasta com nome `@` no projeto.
+
 ## Structure
 
 ```

@@ -189,7 +189,7 @@ CRUD de serviços e clientes pelo gestor.
 
 ---
 
-### Épico 5 — Jornada dos Profissionais e Serviços Executados
+### Épico 5 — Jornada dos Profissionais e Serviços Executados (Concluído)
 
 #### Objetivo
 Cadastro de profissionais, jornada semanal e vínculo de serviços.
@@ -199,24 +199,24 @@ Cadastro de profissionais, jornada semanal e vínculo de serviços.
 - Como gestor, quero vincular serviços a profissionais.
 
 #### Tarefas
-- [ ] Criar ProfessionalsModule com CRUD
-- [ ] Endpoints REST /professionals
-- [ ] Endpoint /professionals/:id/schedule (jornada semanal)
-- [ ] Endpoint /professionals/:id/services (vincular/desvincular)
-- [ ] Página /manager/professionals (tabela e modais)
-- [ ] Componente de edição de jornada semanal
-- [ ] Componente de seleção múltipla de serviços
-- [ ] Validação: horário início < fim
+- [x] Criar ProfessionalsModule com CRUD
+- [x] Endpoints REST /professionals
+- [x] Endpoint /professionals/:id/schedule (jornada semanal)
+- [x] Endpoint /professionals/:id/services (vincular/desvincular)
+- [x] Página /manager/professionals (tabela e modais)
+- [x] Componente de edição de jornada semanal
+- [x] Componente de seleção múltipla de serviços
+- [x] Validação: horário início < fim
 
 #### Critérios de aceite
-- [ ] Gestor cria profissional vinculado a usuário PROFESSIONAL
-- [ ] Gestor define jornada com múltiplos dias/horários
-- [ ] Gestor vincula serviços a profissional
-- [ ] API retorna profissionais com serviços e horários
+- [x] Gestor cria profissional vinculado a usuário PROFESSIONAL
+- [x] Gestor define jornada com múltiplos dias/horários
+- [x] Gestor vincula serviços a profissional
+- [x] API retorna profissionais com serviços e horários
 
 ---
 
-### Épico 6 — Agendamento e Disponibilidade
+### Épico 6 — Agendamento e Disponibilidade (Concluído)
 
 #### Objetivo
 Clientes consultam slots livres e agendam, remarcam ou cancelam horários.
@@ -226,26 +226,26 @@ Clientes consultam slots livres e agendam, remarcam ou cancelam horários.
 - Como cliente, quero reservar, remarcar e cancelar agendamentos.
 
 #### Tarefas
-- [ ] Criar AppointmentsModule (AppointmentsService, AppointmentsController)
-- [ ] Lógica de cálculo de slots (jornada − agendamentos, fatiado pela duração)
-- [ ] GET /appointments/availability?professionalId=&serviceId=&date=
-- [ ] POST /appointments (criar)
-- [ ] PATCH /appointments/:id/reschedule (remarcar)
-- [ ] PATCH /appointments/:id/cancel (cancelar)
-- [ ] Regra de antecedência mínima para cancelamento
-- [ ] Página /customer/new-appointment (fluxo passo-a-passo: serviço→profissional→data→horário→confirmação)
-- [ ] Página /customer/appointments (lista com ações de remarcar/cancelar)
-- [ ] Componentes: Calendar, Select, Card, Dialog
+- [x] Criar AppointmentsModule (AppointmentsService, AppointmentsController)
+- [x] Lógica de cálculo de slots (jornada − agendamentos, fatiado pela duração)
+- [x] GET /appointments/availability?professionalId=&serviceId=&date=
+- [x] POST /appointments (criar)
+- [x] PATCH /appointments/:id/reschedule (remarcar)
+- [x] PATCH /appointments/:id/cancel (cancelar)
+- [x] Regra de antecedência mínima para cancelamento
+- [x] Página /customer/new-appointment (fluxo passo-a-passo: serviço→profissional→data→horário→confirmação)
+- [x] Página /customer/appointments (lista com ações de remarcar/cancelar)
+- [x] Componentes: Calendar, Select, Card, Dialog
 
 #### Critérios de aceite
-- [ ] Slots consideram jornada, duração e agendamentos existentes
-- [ ] Cliente agenda, remarca e cancela com sucesso
-- [ ] Cancelamento fora do prazo é rejeitado
-- [ ] API retorna 409 ao agendar slot já ocupado
+- [x] Slots consideram jornada, duração e agendamentos existentes
+- [x] Cliente agenda, remarca e cancela com sucesso
+- [x] Cancelamento fora do prazo é rejeitado
+- [x] API retorna 409 ao agendar slot já ocupado
 
 ---
 
-### Épico 7 — Proteção contra Double-Booking
+### Épico 7 — Proteção contra Double-Booking (Concluído)
 
 #### Objetivo
 Impedir que dois agendamentos sobrepostos sejam criados para o mesmo profissional, mesmo em requisições concorrentes.
@@ -254,20 +254,20 @@ Impedir que dois agendamentos sobrepostos sejam criados para o mesmo profissiona
 - Como sistema, quero impedir double-booking para evitar conflitos de agenda.
 
 #### Tarefas
-- [ ] Transação Prisma com SELECT FOR UPDATE ao criar agendamento
-- [ ] Exclusion constraint PostgreSQL: `EXCLUDE USING gist (professional_id WITH =, tsrange(start_time, end_time) WITH &&) WHERE (status NOT IN ('CANCELLED'))`
-- [ ] Tratar violação de constraint → HTTP 409 Conflict
-- [ ] Teste automatizado: N requisições concorrentes → apenas 1 aceita
-- [ ] Documentar estratégia no README
+- [x] Transação Prisma com SELECT FOR UPDATE ao criar agendamento
+- [x] Exclusion constraint PostgreSQL: `EXCLUDE USING gist (professional_id WITH =, tsrange(start_time, end_time) WITH &&) WHERE (status NOT IN ('CANCELLED'))`
+- [x] Tratar violação de constraint → HTTP 409 Conflict
+- [x] Teste automatizado: N requisições concorrentes → apenas 1 aceita
+- [x] Documentar estratégia no README
 
 #### Critérios de aceite
-- [ ] 10 requisições concorrentes para mesmo slot → 1 agendamento + 9 rejeitadas (409)
-- [ ] Agendamentos cancelados liberam o slot
-- [ ] Nenhum estado inconsistente possível no banco
+- [x] 10 requisições concorrentes para mesmo slot → 1 agendamento + 9 rejeitadas (409)
+- [x] Agendamentos cancelados liberam o slot
+- [x] Nenhum estado inconsistente possível no banco
 
 ---
 
-### Épico 8 — Agenda por Perfil
+### Épico 8 — Agenda por Perfil (Concluído)
 
 #### Objetivo
 Visualização de agenda adequada para cada perfil.
@@ -278,23 +278,23 @@ Visualização de agenda adequada para cada perfil.
 - Como cliente, quero ver meus próximos agendamentos.
 
 #### Tarefas
-- [ ] GET /appointments com filtros (date, professionalId) para gestor
-- [ ] GET /appointments/my-schedule?date= para profissional
-- [ ] GET /appointments/my-appointments para cliente
-- [ ] Página /manager/appointments (visão por dia, filtro por profissional)
-- [ ] Página /professional/schedule (agenda do dia em timeline/lista)
-- [ ] Atualizar /customer/appointments (próximos + passados)
-- [ ] Componentes: Tabs, Card, Badge (status), Calendar
+- [x] GET /appointments com filtros (date, professionalId) para gestor
+- [x] GET /appointments/my-schedule?date= para profissional
+- [x] GET /appointments/my-appointments para cliente
+- [x] Página /manager/appointments (visão por dia, filtro por profissional)
+- [x] Página /professional/schedule (agenda do dia em timeline/lista)
+- [x] Atualizar /customer/appointments (próximos + passados)
+- [x] Componentes: Tabs, Card, Badge (status), Calendar
 
 #### Critérios de aceite
-- [ ] Gestor vê agendamentos de todos os profissionais no dia
-- [ ] Profissional vê apenas seus agendamentos
-- [ ] Cliente vê apenas seus agendamentos
-- [ ] Filtro por data funciona corretamente
+- [x] Gestor vê agendamentos de todos os profissionais no dia
+- [x] Profissional vê apenas seus agendamentos
+- [x] Cliente vê apenas seus agendamentos
+- [x] Filtro por data funciona corretamente
 
 ---
 
-### Épico 9 — Status dos Atendimentos
+### Épico 9 — Status dos Atendimentos (Concluído)
 
 #### Objetivo
 Profissional atualiza status dos atendimentos (realizado, no-show, cancelado).
@@ -303,20 +303,20 @@ Profissional atualiza status dos atendimentos (realizado, no-show, cancelado).
 - Como profissional, quero marcar atendimentos como realizado, no-show ou cancelado.
 
 #### Tarefas
-- [ ] PATCH /appointments/:id/status (body: { status })
-- [ ] Validar transições de status (SCHEDULED → COMPLETED/NO_SHOW/CANCELLED)
-- [ ] Apenas profissional dono ou gestor pode alterar
-- [ ] Atualizar UI de /professional/schedule com botões de ação por status
-- [ ] Badge visual por status (cores distintas)
+- [x] PATCH /appointments/:id/status (body: { status })
+- [x] Validar transições de status (SCHEDULED → COMPLETED/NO_SHOW/CANCELLED)
+- [x] Apenas profissional dono ou gestor pode alterar
+- [x] Atualizar UI de /professional/schedule com botões de ação por status
+- [x] Badge visual por status (cores distintas)
 
 #### Critérios de aceite
-- [ ] Profissional muda status do atendimento
-- [ ] Transições inválidas retornam erro
-- [ ] UI reflete mudança de status em tempo real
+- [x] Profissional muda status do atendimento
+- [x] Transições inválidas retornam erro
+- [x] UI reflete mudança de status em tempo real
 
 ---
 
-### Épico 10 — Notificações Assíncronas
+### Épico 10 — Notificações Assíncronas (Concluído)
 
 #### Objetivo
 Processar notificações (confirmação, lembrete 24h, cancelamento, remarcação) de forma assíncrona com BullMQ.
@@ -326,25 +326,25 @@ Processar notificações (confirmação, lembrete 24h, cancelamento, remarcaçã
 - Como cliente, quero receber lembrete 24h antes do atendimento.
 
 #### Tarefas
-- [ ] Criar NotificationsModule
-- [ ] Configurar BullMQ com conexão Redis
-- [ ] Criar fila `notifications` e processor/worker
-- [ ] Emitir job ao criar, remarcar ou cancelar agendamento
-- [ ] Emitir job de lembrete 24h (delayed job ou cron)
-- [ ] Registrar notificação na tabela notifications
-- [ ] Garantir idempotência por chave (appointment_id, type)
-- [ ] Endpoint GET /notifications/my para cliente ver histórico
-- [ ] Tela de notificações no frontend (ou componente dropdown)
+- [x] Criar NotificationsModule
+- [x] Configurar BullMQ com conexão Redis
+- [x] Criar fila `notifications` e processor/worker
+- [x] Emitir job ao criar, remarcar ou cancelar agendamento
+- [x] Emitir job de lembrete 24h (delayed job ou cron)
+- [x] Registrar notificação na tabela notifications
+- [x] Garantir idempotência por chave (appointment_id, type)
+- [x] Endpoint GET /notifications/my para cliente ver histórico
+- [x] Tela de notificações no frontend (ou componente dropdown)
 
 #### Critérios de aceite
-- [ ] Notificação registrada no banco após agendamento
-- [ ] Lembrete 24h criado como delayed job
-- [ ] Notificações não duplicam em reprocessamento
-- [ ] Confirmação do agendamento não é atrasada pela notificação
+- [x] Notificação registrada no banco após agendamento
+- [x] Lembrete 24h criado como delayed job
+- [x] Notificações não duplicam em reprocessamento
+- [x] Confirmação do agendamento não é atrasada pela notificação
 
 ---
 
-### Épico 11 — Importação em Massa
+### Épico 11 — Importação em Massa (Concluído)
 
 #### Objetivo
 Gestor importa clientes e agendamentos antigos via CSV/Excel com processamento assíncrono.
@@ -354,24 +354,24 @@ Gestor importa clientes e agendamentos antigos via CSV/Excel com processamento a
 - Como gestor, quero acompanhar o status de cada importação.
 
 #### Tarefas
-- [ ] Criar ImportsModule
-- [ ] Endpoint POST /imports/upload (multipart, salva arquivo)
-- [ ] Criar fila `imports` no BullMQ
-- [ ] Worker de importação com processamento linha a linha
-- [ ] Registrar ImportJob com status (QUEUED, PROCESSING, COMPLETED, COMPLETED_WITH_ERRORS, FAILED)
-- [ ] Registrar ImportJobRow com (rowNumber, rawData, status, errorMessage)
-- [ ] Erros individuais não invalidam o lote
-- [ ] Endpoint GET /imports (listar jobs do gestor)
-- [ ] Endpoint GET /imports/:id (detalhes + linhas com erros)
-- [ ] Página /manager/imports com upload, lista de jobs e detalhes
-- [ ] Suporte a CSV e Excel (xlsx) via biblioteca (exceljs ou xlsx)
+- [x] Criar ImportsModule
+- [x] Endpoint POST /imports/upload (multipart, salva arquivo)
+- [x] Criar fila `imports` no BullMQ
+- [x] Worker de importação com processamento linha a linha
+- [x] Registrar ImportJob com status (QUEUED, PROCESSING, COMPLETED, COMPLETED_WITH_ERRORS, FAILED)
+- [x] Registrar ImportJobRow com (rowNumber, rawData, status, errorMessage)
+- [x] Erros individuais não invalidam o lote
+- [x] Endpoint GET /imports (listar jobs do gestor)
+- [x] Endpoint GET /imports/:id (detalhes + linhas com erros)
+- [x] Página /manager/imports com upload, lista de jobs e detalhes
+- [x] Suporte a CSV e Excel (xlsx) via biblioteca (exceljs ou xlsx)
 
 #### Critérios de aceite
-- [ ] Gestor faz upload de CSV e importação é enfileirada
-- [ ] Status do job atualiza conforme processamento
-- [ ] Linhas com erro são registradas sem parar o lote
-- [ ] Gestor visualiza detalhes de erros por linha
-- [ ] Apenas gestores acessam importação
+- [x] Gestor faz upload de CSV e importação é enfileirada
+- [x] Status do job atualiza conforme processamento
+- [x] Linhas com erro são registradas sem parar o lote
+- [x] Gestor visualiza detalhes de erros por linha
+- [x] Apenas gestores acessam importação
 
 ---
 

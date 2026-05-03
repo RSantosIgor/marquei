@@ -4,24 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
 import { useAuthStore } from '@/stores/auth.store'
-import {
-  LayoutDashboard,
-  Scissors,
-  Users,
-  UserCheck,
-  CalendarDays,
-  Upload,
-  Menu,
-  LogOut,
-} from 'lucide-react'
+import { CalendarDays, Menu, LogOut } from 'lucide-react'
 
 const navItems = [
-  { to: '/manager', icon: LayoutDashboard, label: 'Painel', end: true },
-  { to: '/manager/services', icon: Scissors, label: 'Serviços' },
-  { to: '/manager/customers', icon: Users, label: 'Clientes' },
-  { to: '/manager/professionals', icon: UserCheck, label: 'Profissionais' },
-  { to: '/manager/appointments', icon: CalendarDays, label: 'Agendamentos' },
-  { to: '/manager/imports', icon: Upload, label: 'Importações' },
+  { to: '/professional', icon: CalendarDays, label: 'Minha Agenda', end: true },
 ]
 
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
@@ -37,7 +23,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col">
       <div className="p-6">
         <h1 className="text-xl font-bold tracking-tight">Marquei</h1>
-        <p className="text-xs text-muted-foreground">Painel do Gestor</p>
+        <p className="text-xs text-muted-foreground">Painel do Profissional</p>
       </div>
       <Separator />
       <nav className="flex-1 space-y-1 p-4">
@@ -75,19 +61,16 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   )
 }
 
-export function ManagerLayout() {
+export function ProfessionalLayout() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
   return (
     <div className="flex min-h-screen">
-      {/* Desktop sidebar */}
       <aside className="hidden w-64 border-r bg-card lg:block">
         <NavContent />
       </aside>
 
-      {/* Main content */}
       <div className="flex flex-1 flex-col">
-        {/* Mobile header */}
         <header className="flex h-14 items-center gap-4 border-b bg-card px-4 lg:hidden">
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
@@ -102,7 +85,6 @@ export function ManagerLayout() {
           <h1 className="text-lg font-bold">Marquei</h1>
         </header>
 
-        {/* Page content */}
         <main className="flex-1 p-6">
           <Outlet />
         </main>

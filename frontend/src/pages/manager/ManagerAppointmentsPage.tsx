@@ -1,0 +1,406 @@
+import { useState } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { appointmentsService } from '@/services/appointments.service'
+import { professionalsService } from '@/services/professionals.service'
+import type { Appointment, AppointmentStatus } from '@/types/appointment'
+import {
+  CalendarDays,
+  Clock,
+  Scissors,
+  User,
+  UserCheck,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle,
+  XCircle,
+  Ban,
+} from 'lucide-react'
+
+const STATUS_LABELS: Record<string, string> = {
+  SCHEDULED: 'Agendado',
+  COMPLETED: 'Realizado',
+  NO_SHOW: 'Não compareceu',
+  CANCELLED: 'Cancelado',
+}
+
+const STATUS_VARIANTS: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  SCHEDULED: 'default',
+  COMPLETED: 'secondary',
+  NO_SHOW: 'destructive',
+  CANCELLED: 'outline',
+}
+
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  })
+}
+
+function formatCurrency(value: number | string) {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(Number(value))
+}
+
+function getTodayString() {
+  return new Date().toISOString().split('T')[0]
+}
+
+function formatDateDisplay(dateStr: string) {
+  return new Date(dateStr + 'T12:00:00').toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+function shiftDate(dateStr: string, days: number) {
+  const d = new Date(dateStr + 'T12:00:00')
+  d.setDate(d.getDate() + days)
+  return d.toISOString().split('T')[0]
+}
+
+export function ManagerAppointmentsPage() {
+  const queryClient = useQueryClient()
+  const [date, setDate] = useState(getTodayString())
+  const [professionalId, setProfessionalId] = useState<string>('')
+  const [statusFilter, setStatusFilter] = useState<string>('')
+  const [page, setPage] = useState(1)
+  const [statusTarget, setStatusTarget] = useState<{
+    appointment: Appointment
+    newStatus: AppointmentStatus
+  } | null>(null)
+
+  const { data: professionalsRes } = useQuery({
+    queryKey: ['manager-professionals-list'],
+    queryFn: () => professionalsService.getAll({ limit: 100 }),
+  })
+
+  const { data: appointmentsRes, isLoading } = useQuery({
+    queryKey: ['manager-appointments', date, professionalId, statusFilter, page],
+    queryFn: () =>
+      appointmentsService.getAll({
+        date: date || undefined,
+        professionalId: professionalId || undefined,
+        status: (statusFilter as AppointmentStatus) || undefined,
+        page,
+        limit: 20,
+      }),
+  })
+
+  const statusMutation = useMutation({
+    mutationFn: () =>
+      appointmentsService.updateStatus(
+        statusTarget!.appointment.id,
+        statusTarget!.newStatus,
+      ),
+    onSuccess: () => {
+      toast.success(`Status alterado para "${STATUS_LABELS[statusTarget!.newStatus]}"`)
+      queryClient.invalidateQueries({ queryKey: ['manager-appointments'] })
+      setStatusTarget(null)
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || 'Erro ao alterar status')
+    },
+  })
+
+  const professionals = professionalsRes?.data?.data ?? []
+  const appointments = appointmentsRes?.data?.data ?? []
+  const meta = appointmentsRes?.data?.meta
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">Agendamentos</h1>
+        <p className="text-sm text-muted-foreground">
+          Visualize os agendamentos de todos os profissionais
+        </p>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        {/* Date navigation */}
+        <div className="flex items-end gap-2">
+          <div className="space-y-1">
+            <Label>Data</Label>
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => {
+                  setDate(shiftDate(date, -1))
+                  setPage(1)
+                }}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Input
+                type="date"
+                value={date}
+                onChange={(e) => {
+                  setDate(e.target.value)
+                  setPage(1)
+                }}
+                className="w-auto"
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => {
+                  setDate(shiftDate(date, 1))
+                  setPage(1)
+                }}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setDate(getTodayString())
+              setPage(1)
+            }}
+          >
+            Hoje
+          </Button>
+        </div>
+
+        {/* Professional filter */}
+        <div className="space-y-1">
+          <Label>Profissional</Label>
+          <Select
+            value={professionalId}
+            onValueChange={(v) => {
+              setProfessionalId(v === '__all__' ? '' : v)
+              setPage(1)
+            }}
+          >
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Todos" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Todos</SelectItem>
+              {professionals.map((p) => (
+                <SelectItem key={p.id} value={p.id}>
+                  {p.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Status filter */}
+        <div className="space-y-1">
+          <Label>Status</Label>
+          <Select
+            value={statusFilter}
+            onValueChange={(v) => {
+              setStatusFilter(v === '__all__' ? '' : v)
+              setPage(1)
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Todos" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Todos</SelectItem>
+              {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                <SelectItem key={key} value={key}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <p className="text-sm font-medium capitalize">{formatDateDisplay(date)}</p>
+
+      {/* Appointments list */}
+      {isLoading ? (
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : appointments.length === 0 ? (
+        <div className="py-12 text-center">
+          <CalendarDays className="mx-auto h-12 w-12 text-muted-foreground/50" />
+          <p className="mt-4 text-muted-foreground">
+            Nenhum agendamento encontrado
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {appointments.map((apt) => (
+            <Card key={apt.id}>
+              <CardContent className="p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium">
+                        {formatTime(apt.startTime)} – {formatTime(apt.endTime)}
+                      </span>
+                      <Badge variant={STATUS_VARIANTS[apt.status]}>
+                        {STATUS_LABELS[apt.status]}
+                      </Badge>
+                    </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <User className="h-3.5 w-3.5" />
+                        {apt.customerName}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <UserCheck className="h-3.5 w-3.5" />
+                        {apt.professionalName}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Scissors className="h-3.5 w-3.5" />
+                        {apt.serviceName}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {apt.serviceDuration} min •{' '}
+                      {formatCurrency(apt.servicePrice)}
+                    </p>
+                    {apt.notes && (
+                      <p className="text-sm text-muted-foreground italic">
+                        Obs: {apt.notes}
+                      </p>
+                    )}
+                  </div>
+
+                  {apt.status === 'SCHEDULED' && (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setStatusTarget({ appointment: apt, newStatus: 'COMPLETED' })}
+                        className="gap-1"
+                      >
+                        <CheckCircle className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Realizado</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setStatusTarget({ appointment: apt, newStatus: 'NO_SHOW' })}
+                        className="gap-1"
+                      >
+                        <XCircle className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Não veio</span>
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setStatusTarget({ appointment: apt, newStatus: 'CANCELLED' })}
+                        className="gap-1 text-destructive hover:text-destructive"
+                      >
+                        <Ban className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Cancelar</span>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {/* Pagination */}
+          {meta && meta.totalPages > 1 && (
+            <div className="flex items-center justify-center gap-4 pt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {page} de {meta.totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={page >= meta.totalPages}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Status change dialog */}
+      <Dialog
+        open={!!statusTarget}
+        onOpenChange={(open) => {
+          if (!open) setStatusTarget(null)
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar Alteração de Status</DialogTitle>
+            <DialogDescription>
+              Alterar o atendimento de{' '}
+              <span className="font-medium">{statusTarget?.appointment.customerName}</span>
+              {' '}com{' '}
+              <span className="font-medium">{statusTarget?.appointment.professionalName}</span>
+              {' '}({statusTarget?.appointment.serviceName}) para{' '}
+              <span className="font-medium">
+                {statusTarget && STATUS_LABELS[statusTarget.newStatus]}
+              </span>
+              ?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setStatusTarget(null)}>
+              Voltar
+            </Button>
+            <Button
+              onClick={() => statusMutation.mutate()}
+              disabled={statusMutation.isPending}
+              variant={statusTarget?.newStatus === 'CANCELLED' ? 'destructive' : 'default'}
+            >
+              {statusMutation.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              Confirmar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
