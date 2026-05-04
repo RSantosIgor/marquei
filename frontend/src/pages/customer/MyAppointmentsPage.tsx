@@ -193,7 +193,7 @@ export function MyAppointmentsPage() {
                   className="gap-1"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  Remarcar
+                  <span className="hidden sm:inline">Remarcar</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -202,7 +202,7 @@ export function MyAppointmentsPage() {
                   className="gap-1 text-destructive hover:text-destructive"
                 >
                   <X className="h-3.5 w-3.5" />
-                  Cancelar
+                  <span className="hidden sm:inline">Cancelar</span>
                 </Button>
               </div>
             )}
@@ -340,7 +340,7 @@ export function MyAppointmentsPage() {
                     Nenhum horário disponível nesta data
                   </p>
                 ) : (
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                     {slots.map((slot) => (
                       <Button
                         key={slot}

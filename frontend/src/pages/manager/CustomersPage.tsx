@@ -169,7 +169,7 @@ export function CustomersPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
-              <TableHead>E-mail</TableHead>
+              <TableHead className="hidden sm:table-cell">E-mail</TableHead>
               <TableHead className="hidden md:table-cell">Telefone</TableHead>
               <TableHead className="hidden md:table-cell">Cadastro</TableHead>
               <TableHead>Status</TableHead>
@@ -193,7 +193,7 @@ export function CustomersPage() {
               data?.data.map((customer) => (
                 <TableRow key={customer.id}>
                   <TableCell className="font-medium">{customer.name}</TableCell>
-                  <TableCell>{customer.email}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{customer.email}</TableCell>
                   <TableCell className="hidden md:table-cell">
                     {customer.phone || '—'}
                   </TableCell>

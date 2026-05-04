@@ -212,7 +212,7 @@ export function ProfessionalSchedulePage() {
                         className="gap-1"
                       >
                         <CheckCircle className="h-3.5 w-3.5" />
-                        Realizado
+                        <span className="hidden sm:inline">Realizado</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -221,7 +221,7 @@ export function ProfessionalSchedulePage() {
                         className="gap-1"
                       >
                         <XCircle className="h-3.5 w-3.5" />
-                        Não veio
+                        <span className="hidden sm:inline">Não veio</span>
                       </Button>
                       <Button
                         variant="outline"
@@ -230,7 +230,7 @@ export function ProfessionalSchedulePage() {
                         className="gap-1 text-destructive hover:text-destructive"
                       >
                         <Ban className="h-3.5 w-3.5" />
-                        Cancelar
+                        <span className="hidden sm:inline">Cancelar</span>
                       </Button>
                     </div>
                   )}

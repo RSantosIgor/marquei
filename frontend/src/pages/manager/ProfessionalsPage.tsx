@@ -427,7 +427,7 @@ export function ProfessionalsPage() {
                 <p className="text-xs text-destructive">{createForm.formState.errors.password.message}</p>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="create-phone">Telefone</Label>
                 <Input id="create-phone" placeholder="(11) 99999-0000" {...createForm.register('phone')} />
@@ -476,7 +476,7 @@ export function ProfessionalsPage() {
                 <p className="text-xs text-destructive">{editForm.formState.errors.name.message}</p>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="edit-phone">Telefone</Label>
                 <Input id="edit-phone" placeholder="(11) 99999-0000" {...editForm.register('phone')} />
@@ -553,12 +553,12 @@ export function ProfessionalsPage() {
               </p>
             )}
             {scheduleEntries.map((entry, index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index} className="flex flex-wrap items-center gap-2">
                 <Select
                   value={String(entry.dayOfWeek)}
                   onValueChange={(value) => updateScheduleEntry(index, 'dayOfWeek', parseInt(value))}
                 >
-                  <SelectTrigger className="w-[120px]">
+                  <SelectTrigger className="w-full sm:w-[120px]">
                     <SelectValue placeholder="Dia" />
                   </SelectTrigger>
                   <SelectContent>

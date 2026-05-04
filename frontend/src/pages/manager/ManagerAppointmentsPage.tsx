@@ -181,38 +181,36 @@ function DayView() {
     <>
       {/* Filters */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="flex items-end gap-2">
-          <div className="space-y-1">
-            <Label>Data</Label>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 shrink-0"
-                onClick={() => { setDate(shiftDate(date, -1)); setPage(1) }}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <DatePicker value={date} onChange={(v) => { setDate(v); setPage(1) }} className="w-[160px]" />
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 shrink-0"
-                onClick={() => { setDate(shiftDate(date, 1)); setPage(1) }}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+        <div className="space-y-1">
+          <Label>Data</Label>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={() => { setDate(shiftDate(date, -1)); setPage(1) }}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <DatePicker value={date} onChange={(v) => { setDate(v); setPage(1) }} className="w-full sm:w-[160px]" />
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={() => { setDate(shiftDate(date, 1)); setPage(1) }}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="sm" className="shrink-0 ml-1" onClick={() => { setDate(getTodayString()); setPage(1) }}>
+              Hoje
+            </Button>
           </div>
-          <Button variant="ghost" size="sm" className="shrink-0" onClick={() => { setDate(getTodayString()); setPage(1) }}>
-            Hoje
-          </Button>
         </div>
 
         <div className="space-y-1">
           <Label>Profissional</Label>
           <Select value={professionalId} onValueChange={(v) => { setProfessionalId(v); setPage(1) }}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
@@ -227,7 +225,7 @@ function DayView() {
         <div className="space-y-1">
           <Label>Status</Label>
           <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
@@ -387,7 +385,7 @@ function HistoryView() {
         <div className="space-y-1">
           <Label>Profissional</Label>
           <Select value={professionalId} onValueChange={(v) => { setProfessionalId(v); setPage(1) }}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full sm:w-[200px]">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
@@ -402,7 +400,7 @@ function HistoryView() {
         <div className="space-y-1">
           <Label>Status</Label>
           <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
