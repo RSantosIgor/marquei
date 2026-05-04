@@ -19,6 +19,7 @@ import {
   QueryManagerAppointmentsDto,
   QueryProfessionalScheduleDto,
   UpdateStatusDto,
+  QueryHistoryDto,
 } from './dto';
 
 @Controller('appointments')
@@ -93,6 +94,12 @@ export class AppointmentsController {
   @Roles(Role.MANAGER)
   async findAll(@Query() query: QueryManagerAppointmentsDto) {
     return this.appointmentsService.findAll(query);
+  }
+
+  @Get('history')
+  @Roles(Role.MANAGER)
+  async getHistory(@Query() query: QueryHistoryDto) {
+    return this.appointmentsService.getHistory(query);
   }
 
   // ─── Professional endpoints ───────────────────────

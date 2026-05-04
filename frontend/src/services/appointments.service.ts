@@ -51,6 +51,17 @@ export const appointmentsService = {
       params: { date },
     }),
 
+  // ─── History (manager) ──────────────────────────
+  getHistory: (params?: {
+    dateFrom?: string
+    dateTo?: string
+    professionalId?: string
+    serviceId?: string
+    status?: AppointmentStatus
+    page?: number
+    limit?: number
+  }) => api.get<PaginatedResponse<Appointment>>('/appointments/history', { params }),
+
   // ─── Status update (professional + manager) ─────
   updateStatus: (id: string, status: AppointmentStatus) =>
     api.patch<{ data: Appointment }>(`/appointments/${id}/status`, { status }),

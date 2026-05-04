@@ -7,7 +7,7 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - frontend_node_modules:/app/node_modules
     environment:
       - VITE_API_URL=http://localhost:3000
     depends_on:
@@ -21,7 +21,7 @@ services:
       - "3000:3000"
     volumes:
       - ./backend:/app
-      - /app/node_modules
+      - backend_node_modules:/app/node_modules
     environment:
       - DATABASE_URL=postgresql://marquei:marquei@postgres:5432/marquei
       - REDIS_HOST=redis
@@ -79,3 +79,5 @@ volumes:
   postgres_data:
   redis_data:
   pgadmin_data:
+  frontend_node_modules:
+  backend_node_modules:

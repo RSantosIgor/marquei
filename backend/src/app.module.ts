@@ -13,6 +13,7 @@ import { ProfessionalsModule } from './professionals/professionals.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ImportsModule } from './imports/imports.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards';
 
@@ -39,6 +40,7 @@ import { RolesGuard } from './common/guards';
     AppointmentsModule,
     NotificationsModule,
     ImportsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [

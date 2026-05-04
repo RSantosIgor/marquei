@@ -4,8 +4,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { DatePicker } from '@/components/DatePicker'
 import {
   Dialog,
   DialogContent,
@@ -132,10 +131,9 @@ export function ProfessionalSchedulePage() {
           <ChevronLeft className="h-4 w-4" />
         </Button>
         <div className="flex items-center gap-2">
-          <Input
-            type="date"
+          <DatePicker
             value={date}
-            onChange={(e) => e.target.value && setDate(e.target.value)}
+            onChange={(v) => v && setDate(v)}
             className="w-auto"
           />
         </div>

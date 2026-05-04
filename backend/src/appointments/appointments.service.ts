@@ -16,6 +16,7 @@ import {
   QueryManagerAppointmentsDto,
   QueryProfessionalScheduleDto,
   UpdateStatusDto,
+  QueryHistoryDto,
 } from './dto';
 
 const MIN_CANCEL_HOURS = 24;
@@ -542,6 +543,56 @@ export class AppointmentsService {
       .catch(() => null);
 
     return this.mapAppointment(updated);
+  }
+
+  async getHistory(query: QueryHistoryDto) {
+    const {
+      dateFrom,
+      dateTo,
+      professionalId,
+      serviceId,
+      status,
+      page = 1,
+      limit = 20,
+    } = query;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.AppointmentWhereInput = {};
+    if (professionalId) where.professionalId = professionalId;
+    if (serviceId) where.serviceId = serviceId;
+    if (status) where.status = status;
+
+    if (dateFrom || dateTo) {
+      where.startTime = {};
+      if (dateFrom)
+        (where.startTime as Prisma.DateTimeFilter).gte = new Date(
+          dateFrom + 'T00:00:00.000Z',
+        );
+      if (dateTo)
+        (where.startTime as Prisma.DateTimeFilter).lte = new Date(
+          dateTo + 'T23:59:59.999Z',
+        );
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.appointment.findMany({
+        where,
+        include: {
+          professional: { include: { user: { select: { name: true } } } },
+          customer: { include: { user: { select: { name: true } } } },
+          service: true,
+        },
+        orderBy: { startTime: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.appointment.count({ where }),
+    ]);
+
+    return {
+      data: data.map((a) => this.mapAppointment(a)),
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
+    };
   }
 
   private async findOwnedAppointment(userId: string, appointmentId: string) {

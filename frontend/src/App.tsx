@@ -12,6 +12,7 @@ import { CustomersPage } from '@/pages/manager/CustomersPage'
 import { ProfessionalsPage } from '@/pages/manager/ProfessionalsPage'
 import { ManagerAppointmentsPage } from '@/pages/manager/ManagerAppointmentsPage'
 import { ImportsPage } from '@/pages/manager/ImportsPage'
+import { DashboardPage } from '@/pages/manager/DashboardPage'
 import { ProfessionalSchedulePage } from '@/pages/professional/ProfessionalSchedulePage'
 import { NewAppointmentPage } from '@/pages/customer/NewAppointmentPage'
 import { MyAppointmentsPage } from '@/pages/customer/MyAppointmentsPage'
@@ -37,16 +38,6 @@ function RootRedirect() {
   return <Navigate to={getRoleRedirect(user.role)} replace />
 }
 
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <div className="flex min-h-[60vh] items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        <p className="mt-2 text-muted-foreground">Em construção</p>
-      </div>
-    </div>
-  )
-}
 
 function App() {
   return (
@@ -60,7 +51,7 @@ function App() {
           {/* Manager routes */}
           <Route element={<ProtectedRoute allowedRoles={['MANAGER']} />}>
             <Route path="/manager" element={<ManagerLayout />}>
-              <Route index element={<PlaceholderPage title="Painel do Gestor" />} />
+              <Route index element={<DashboardPage />} />
               <Route path="services" element={<ServicesPage />} />
               <Route path="customers" element={<CustomersPage />} />
               <Route path="professionals" element={<ProfessionalsPage />} />

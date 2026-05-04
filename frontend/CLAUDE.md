@@ -4,6 +4,10 @@
 
 O alias `@` nos imports (ex: `@/components/ui/button`) **resolve para `frontend/src/`**, NÃO é uma pasta literal chamada `@`. Quando a CLI do shadcn exibe caminhos como `@\components\ui\button.tsx`, ela está referenciando `frontend/src/components/ui/button.tsx`. Não existe pasta com nome `@` no projeto.
 
+## ⚠️ React 18 + shadcn v4: forwardRef obrigatório
+
+Este projeto usa **React 18**, mas a CLI do shadcn v4 gera componentes para **React 19** (que aceita `ref` como prop regular). Ao adicionar novos componentes shadcn via CLI, **é necessário converter** os wrappers de Radix primitives de `function Component()` para `React.forwardRef()`, caso contrário o console mostrará: `Warning: Function components cannot be given refs`.
+
 ## Structure
 
 ```

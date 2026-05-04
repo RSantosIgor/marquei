@@ -375,7 +375,7 @@ Gestor importa clientes e agendamentos antigos via CSV/Excel com processamento a
 
 ---
 
-### Épico 12 — Histórico e Filtros
+### Épico 12 — Histórico e Filtros (Concluído)
 
 #### Objetivo
 Consulta de histórico de atendimentos com filtros avançados.
@@ -384,20 +384,20 @@ Consulta de histórico de atendimentos com filtros avançados.
 - Como gestor, quero consultar histórico com filtros (período, profissional, serviço, status).
 
 #### Tarefas
-- [ ] Endpoint GET /appointments/history com query params (dateFrom, dateTo, professionalId, serviceId, status, page, limit)
-- [ ] Paginação cursor-based ou offset
-- [ ] Página /manager/appointments com aba de histórico
-- [ ] Filtros com Select, DatePicker, Input
-- [ ] Exportação básica dos resultados (CSV)
+- [x] Endpoint GET /appointments/history com query params (dateFrom, dateTo, professionalId, serviceId, status, page, limit)
+- [x] Paginação cursor-based ou offset
+- [x] Página /manager/appointments com aba de histórico
+- [x] Filtros com Select, DatePicker, Input
+- [x] Exportação básica dos resultados (CSV)
 
 #### Critérios de aceite
-- [ ] Filtros combinados retornam resultados corretos
-- [ ] Paginação funciona com filtros ativos
-- [ ] Performance aceitável com volume de dados do seed
+- [x] Filtros combinados retornam resultados corretos
+- [x] Paginação funciona com filtros ativos
+- [x] Performance aceitável com volume de dados do seed
 
 ---
 
-### Épico 13 — Dashboard do Gestor
+### Épico 13 — Dashboard do Gestor (Concluído)
 
 #### Objetivo
 Painel com indicadores operacionais para o gestor.
@@ -406,19 +406,19 @@ Painel com indicadores operacionais para o gestor.
 - Como gestor, quero ver taxa de ocupação, no-show, faturamento e serviços populares.
 
 #### Tarefas
-- [ ] Criar DashboardModule
-- [ ] Endpoint GET /dashboard/stats?from=&to= retornando: occupancyByProfessional, noShowRate, estimatedRevenue, topServices
-- [ ] Queries otimizadas com agregações SQL
-- [ ] Cache Redis para queries pesadas (TTL 5min)
-- [ ] Página /manager/dashboard com cards e gráficos
-- [ ] Componentes: Card (KPIs), gráfico de barras (ocupação), lista (top serviços)
-- [ ] Filtro de período (semana, mês, customizado)
+- [x] Criar DashboardModule
+- [x] Endpoint GET /dashboard/stats?from=&to= retornando: occupancyByProfessional, noShowRate, estimatedRevenue, topServices
+- [x] Queries otimizadas com agregações SQL
+- [x] Cache Redis para queries pesadas (TTL 5min)
+- [x] Página /manager/dashboard com cards e gráficos
+- [x] Componentes: Card (KPIs), gráfico de barras (ocupação), lista (top serviços)
+- [x] Filtro de período (semana, mês, customizado)
 
 #### Critérios de aceite
-- [ ] Dashboard exibe 4 indicadores corretamente
-- [ ] Dados refletem agendamentos reais do período
-- [ ] Cache funciona e expira corretamente
-- [ ] Apenas gestores acessam o dashboard
+- [x] Dashboard exibe 4 indicadores corretamente
+- [x] Dados refletem agendamentos reais do período
+- [x] Cache funciona e expira corretamente
+- [x] Apenas gestores acessam o dashboard
 
 ---
 

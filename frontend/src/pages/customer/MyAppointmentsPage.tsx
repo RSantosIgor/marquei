@@ -13,8 +13,8 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { DatePicker } from '@/components/DatePicker'
 import { appointmentsService } from '@/services/appointments.service'
 import type { Appointment } from '@/types/appointment'
 import {
@@ -316,16 +316,15 @@ export function MyAppointmentsPage() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="reschedule-date">Nova data</Label>
-              <Input
-                id="reschedule-date"
-                type="date"
-                min={getTodayString()}
-                value={newDate}
-                onChange={(e) => {
-                  setNewDate(e.target.value)
+              <Label>Nova data</Label>
+              <DatePicker
+                value={newDate || undefined}
+                onChange={(v) => {
+                  setNewDate(v)
                   setNewSlot('')
                 }}
+                minDate={getTodayString()}
+                placeholder="Selecione a data"
               />
             </div>
 

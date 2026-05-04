@@ -9,21 +9,30 @@ function Popover({
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
-function PopoverTrigger({
-  ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
-}
+const PopoverTrigger = React.forwardRef<
+  React.ComponentRef<typeof PopoverPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
+>(({ ...props }, ref) => {
+  return <PopoverPrimitive.Trigger ref={ref} data-slot="popover-trigger" {...props} />
+})
+PopoverTrigger.displayName = "PopoverTrigger"
 
-function PopoverContent({
-  className,
-  align = "center",
-  sideOffset = 4,
-  ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+const PopoverClose = React.forwardRef<
+  React.ComponentRef<typeof PopoverPrimitive.Close>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Close>
+>(({ ...props }, ref) => {
+  return <PopoverPrimitive.Close ref={ref} data-slot="popover-close" {...props} />
+})
+PopoverClose.displayName = "PopoverClose"
+
+const PopoverContent = React.forwardRef<
+  React.ComponentRef<typeof PopoverPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
+>(({ className, align = "center", sideOffset = 4, ...props }, ref) => {
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
+        ref={ref}
         data-slot="popover-content"
         align={align}
         sideOffset={sideOffset}
@@ -35,13 +44,16 @@ function PopoverContent({
       />
     </PopoverPrimitive.Portal>
   )
-}
+})
+PopoverContent.displayName = "PopoverContent"
 
-function PopoverAnchor({
-  ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
-  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />
-}
+const PopoverAnchor = React.forwardRef<
+  React.ComponentRef<typeof PopoverPrimitive.Anchor>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Anchor>
+>(({ ...props }, ref) => {
+  return <PopoverPrimitive.Anchor ref={ref} data-slot="popover-anchor" {...props} />
+})
+PopoverAnchor.displayName = "PopoverAnchor"
 
 function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -80,6 +92,7 @@ export {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  PopoverClose,
   PopoverAnchor,
   PopoverHeader,
   PopoverTitle,

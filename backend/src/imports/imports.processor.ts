@@ -106,15 +106,15 @@ export class ImportsProcessor extends WorkerHost {
     if (!worksheet) return [];
 
     const headers: string[] = [];
-    worksheet.getRow(1).eachCell((cell) => {
+    worksheet.getRow(1).eachCell((cell: any) => {
       headers.push(String(cell.value ?? ''));
     });
 
     const rows: CsvRow[] = [];
-    worksheet.eachRow((row, rowNumber) => {
+    worksheet.eachRow((row: any, rowNumber: any) => {
       if (rowNumber === 1) return;
       const obj: CsvRow = {};
-      row.eachCell((cell, colNumber) => {
+      row.eachCell((cell: any, colNumber: any) => {
         const header = headers[colNumber - 1];
         if (header) obj[header] = String(cell.value ?? '');
       });

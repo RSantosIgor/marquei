@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { DatePicker } from '@/components/DatePicker'
 import { appointmentsService } from '@/services/appointments.service'
 import type { Service } from '@/types/service'
 import type { AvailableProfessional } from '@/types/appointment'
@@ -291,16 +292,13 @@ export function NewAppointmentPage() {
               {selectedProfessional?.name}
             </span>
           </p>
-          <div className="max-w-xs">
-            <Label htmlFor="date">Data</Label>
-            <Input
-              id="date"
-              type="date"
-              min={getTodayString()}
-              value={selectedDate}
-              onChange={(e) => {
-                if (e.target.value) selectDate(e.target.value)
-              }}
+          <div className="max-w-xs space-y-1">
+            <Label>Data</Label>
+            <DatePicker
+              value={selectedDate || undefined}
+              onChange={(v) => { if (v) selectDate(v) }}
+              minDate={getTodayString()}
+              placeholder="Selecione a data"
             />
           </div>
         </div>

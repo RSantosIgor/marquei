@@ -7,11 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group.tsx'
+import { TimePicker } from '@/components/TimePicker'
 import {
   Select,
   SelectContent,
@@ -47,7 +43,6 @@ import {
   Trash2,
   Loader2,
   Clock,
-  Clock2,
   Scissors,
   X,
 } from 'lucide-react'
@@ -543,7 +538,7 @@ export function ProfessionalsPage() {
       </Dialog>
 
       {/* Schedule Editor Dialog */}
-      <Dialog open={!!scheduleTarget} onOpenChange={() => setScheduleTarget(null)}>
+      <Dialog open={!!scheduleTarget} onOpenChange={() => setScheduleTarget(null)} modal={false}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Jornada de {scheduleTarget?.name}</DialogTitle>
@@ -574,29 +569,15 @@ export function ProfessionalsPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                <InputGroup className="w-32">
-                  <InputGroupAddon>
-                    <Clock2 />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type="time"
-                    value={entry.startTime}
-                    onChange={(e: any) => updateScheduleEntry(index, 'startTime', e.target.value)}
-                    className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                  />
-                </InputGroup>
+                <TimePicker
+                  value={entry.startTime}
+                  onChange={(v) => updateScheduleEntry(index, 'startTime', v)}
+                />
                 <span className="text-sm text-muted-foreground">às</span>
-                <InputGroup className="w-32">
-                  <InputGroupAddon>
-                    <Clock2 />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type="time"
-                    value={entry.endTime}
-                    onChange={(e: any) => updateScheduleEntry(index, 'endTime', e.target.value)}
-                    className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                  />
-                </InputGroup>
+                <TimePicker
+                  value={entry.endTime}
+                  onChange={(v) => updateScheduleEntry(index, 'endTime', v)}
+                />
                 <Button
                   type="button"
                   variant="ghost"
