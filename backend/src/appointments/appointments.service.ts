@@ -14,7 +14,6 @@ import {
   QueryAvailabilityDto,
   QueryAppointmentDto,
   QueryManagerAppointmentsDto,
-  QueryProfessionalScheduleDto,
   UpdateStatusDto,
   QueryHistoryDto,
 } from './dto';
@@ -298,11 +297,7 @@ export class AppointmentsService {
     };
   }
 
-  async reschedule(
-    userId: string,
-    id: string,
-    dto: RescheduleAppointmentDto,
-  ) {
+  async reschedule(userId: string, id: string, dto: RescheduleAppointmentDto) {
     const appointment = await this.findOwnedAppointment(userId, id);
 
     if (appointment.status !== AppointmentStatus.SCHEDULED) {
@@ -458,7 +453,12 @@ export class AppointmentsService {
     return { data: data.map((a) => this.mapAppointment(a)) };
   }
 
-  async updateStatus(userId: string, role: string, id: string, dto: UpdateStatusDto) {
+  async updateStatus(
+    userId: string,
+    role: string,
+    id: string,
+    dto: UpdateStatusDto,
+  ) {
     const appointment = await this.prisma.appointment.findUnique({
       where: { id },
       include: { professional: true },

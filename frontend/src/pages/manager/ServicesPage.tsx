@@ -25,6 +25,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { servicesService } from '@/services/services.service'
+import { getApiError } from '@/lib/api'
 import type { Service } from '@/types/service'
 import { Plus, Search, Pencil, Trash2, Loader2 } from 'lucide-react'
 
@@ -66,8 +67,8 @@ export function ServicesPage() {
       queryClient.invalidateQueries({ queryKey: ['services'] })
       closeDialog()
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao criar serviço')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao criar serviço'))
     },
   })
 
@@ -79,8 +80,8 @@ export function ServicesPage() {
       queryClient.invalidateQueries({ queryKey: ['services'] })
       closeDialog()
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao atualizar serviço')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao atualizar serviço'))
     },
   })
 
@@ -91,8 +92,8 @@ export function ServicesPage() {
       queryClient.invalidateQueries({ queryKey: ['services'] })
       setDeleteTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao desativar serviço')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao desativar serviço'))
     },
   })
 

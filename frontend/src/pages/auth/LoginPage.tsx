@@ -13,6 +13,7 @@ import {
   FieldGroup,
 } from '@/components/ui/field'
 import { authService } from '@/services/auth.service'
+import { getApiError } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth.store'
 import { getRoleRedirect } from '@/lib/role-redirect'
 import { Mail, Lock, CalendarCheck, Clock, Users, Loader2 } from 'lucide-react'
@@ -42,9 +43,8 @@ export function LoginPage() {
       setAuth(user, accessToken, refreshToken)
       toast.success(`Bem-vindo(a), ${user.name}!`)
       navigate(getRoleRedirect(user.role))
-    } catch (err: any) {
-      const message = err.response?.data?.message || 'Erro ao fazer login'
-      toast.error(message)
+    } catch (err) {
+      toast.error(getApiError(err, 'Erro ao fazer login'))
     } finally {
       setLoading(false)
     }

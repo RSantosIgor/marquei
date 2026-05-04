@@ -20,6 +20,7 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { importsService } from '@/services/imports.service'
+import { getApiError } from '@/lib/api'
 import type { ImportJob, ImportStatus } from '@/types/import'
 
 const STATUS_LABELS: Record<ImportStatus, string> = {
@@ -77,8 +78,8 @@ export function ImportsPage() {
       toast.success('Arquivo enviado! Importação iniciada.')
       queryClient.invalidateQueries({ queryKey: ['import-jobs'] })
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao enviar arquivo')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao enviar arquivo'))
     },
   })
 

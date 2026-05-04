@@ -25,6 +25,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { customersService } from '@/services/customers.service'
+import { getApiError } from '@/lib/api'
 import type { Customer } from '@/types/customer'
 import { Plus, Search, Pencil, Trash2, Loader2 } from 'lucide-react'
 
@@ -75,8 +76,8 @@ export function CustomersPage() {
       setCreateOpen(false)
       createForm.reset()
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao criar cliente')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao criar cliente'))
     },
   })
 
@@ -89,8 +90,8 @@ export function CustomersPage() {
       setEditing(null)
       editForm.reset()
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao atualizar cliente')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao atualizar cliente'))
     },
   })
 
@@ -101,8 +102,8 @@ export function CustomersPage() {
       queryClient.invalidateQueries({ queryKey: ['customers'] })
       setDeleteTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao desativar cliente')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao desativar cliente'))
     },
   })
 

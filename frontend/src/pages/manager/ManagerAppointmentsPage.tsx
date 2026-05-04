@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dialog'
 import { appointmentsService } from '@/services/appointments.service'
 import { professionalsService } from '@/services/professionals.service'
+import { getApiError } from '@/lib/api'
 import type { Appointment, AppointmentStatus } from '@/types/appointment'
 import {
   CalendarDays,
@@ -168,8 +169,8 @@ function DayView() {
       queryClient.invalidateQueries({ queryKey: ['manager-appointments'] })
       setStatusTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao alterar status')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao alterar status'))
     },
   })
 

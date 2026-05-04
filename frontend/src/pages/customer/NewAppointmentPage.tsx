@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { DatePicker } from '@/components/DatePicker'
 import { appointmentsService } from '@/services/appointments.service'
+import { getApiError } from '@/lib/api'
 import type { Service } from '@/types/service'
 import type { AvailableProfessional } from '@/types/appointment'
 import {
@@ -107,8 +108,8 @@ export function NewAppointmentPage() {
       toast.success('Agendamento realizado com sucesso!')
       navigate('/customer/appointments')
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao agendar')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao agendar'))
     },
   })
 

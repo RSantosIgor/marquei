@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   NotFoundException,
   BadRequestException,
-  ConflictException,
   ForbiddenException,
 } from '@nestjs/common';
 import { AppointmentStatus } from '@prisma/client';

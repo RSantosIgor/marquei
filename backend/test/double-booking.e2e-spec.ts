@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { PrismaClient, Role } from '@prisma/client';
 import { AppointmentsService } from '../src/appointments/appointments.service';
-import { PrismaService } from '../src/prisma/prisma.service';
 import { AppointmentsModule } from '../src/appointments/appointments.module';
 import { PrismaModule } from '../src/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
@@ -15,7 +14,7 @@ describe('Double-Booking Prevention (e2e)', () => {
 
   const TEST_PREFIX = 'dblbook-test-';
 
-  let testUserIds: string[] = [];
+  const testUserIds: string[] = [];
   let testProfessionalId: string;
   let testServiceId: string;
 
@@ -94,7 +93,9 @@ describe('Double-Booking Prevention (e2e)', () => {
   afterAll(async () => {
     // Cleanup test data
     await prisma.appointment.deleteMany({
-      where: { professional: { user: { email: `${TEST_PREFIX}prof@test.com` } } },
+      where: {
+        professional: { user: { email: `${TEST_PREFIX}prof@test.com` } },
+      },
     });
     await prisma.workSchedule.deleteMany({
       where: { professionalId: testProfessionalId },

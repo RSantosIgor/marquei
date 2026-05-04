@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/dialog'
 import { professionalsService } from '@/services/professionals.service'
 import { servicesService } from '@/services/services.service'
+import { getApiError } from '@/lib/api'
 import type { Professional, WorkScheduleEntry } from '@/types/professional'
 import type { Service } from '@/types/service'
 import {
@@ -128,8 +129,8 @@ export function ProfessionalsPage() {
       setCreateOpen(false)
       createForm.reset()
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao criar profissional')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao criar profissional'))
     },
   })
 
@@ -141,8 +142,8 @@ export function ProfessionalsPage() {
       queryClient.invalidateQueries({ queryKey: ['professionals'] })
       setEditing(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao atualizar profissional')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao atualizar profissional'))
     },
   })
 
@@ -153,8 +154,8 @@ export function ProfessionalsPage() {
       queryClient.invalidateQueries({ queryKey: ['professionals'] })
       setDeleteTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao desativar profissional')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao desativar profissional'))
     },
   })
 
@@ -166,8 +167,8 @@ export function ProfessionalsPage() {
       queryClient.invalidateQueries({ queryKey: ['professionals'] })
       setScheduleTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao atualizar jornada')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao atualizar jornada'))
     },
   })
 
@@ -179,8 +180,8 @@ export function ProfessionalsPage() {
       queryClient.invalidateQueries({ queryKey: ['professionals'] })
       setServicesTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao vincular serviços')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao vincular serviços'))
     },
   })
 

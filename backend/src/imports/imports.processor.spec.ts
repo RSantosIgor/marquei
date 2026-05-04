@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ImportStatus, ImportRowStatus, Role } from '@prisma/client';
+import { ImportStatus, ImportRowStatus } from '@prisma/client';
 import { ImportsProcessor } from './imports.processor';
 import { PrismaService } from '../prisma/prisma.service';
 

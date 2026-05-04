@@ -1,5 +1,12 @@
 import axios from 'axios'
 
+export function getApiError(err: unknown, fallback: string): string {
+  if (axios.isAxiosError(err)) {
+    return (err.response?.data as { message?: string })?.message ?? fallback
+  }
+  return fallback
+}
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   headers: {

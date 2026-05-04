@@ -16,6 +16,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { DatePicker } from '@/components/DatePicker'
 import { appointmentsService } from '@/services/appointments.service'
+import { getApiError } from '@/lib/api'
 import type { Appointment } from '@/types/appointment'
 import {
   CalendarDays,
@@ -106,8 +107,8 @@ export function MyAppointmentsPage() {
       queryClient.invalidateQueries({ queryKey: ['my-appointments'] })
       closeRescheduleDialog()
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao remarcar')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao remarcar'))
     },
   })
 
@@ -118,8 +119,8 @@ export function MyAppointmentsPage() {
       queryClient.invalidateQueries({ queryKey: ['my-appointments'] })
       setCancelTarget(null)
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || 'Erro ao cancelar')
+    onError: (err: unknown) => {
+      toast.error(getApiError(err, 'Erro ao cancelar'))
     },
   })
 
