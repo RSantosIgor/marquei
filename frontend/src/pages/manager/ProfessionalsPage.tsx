@@ -37,6 +37,7 @@ import { servicesService } from '@/services/services.service'
 import { getApiError } from '@/lib/api'
 import type { Professional, WorkScheduleEntry } from '@/types/professional'
 import type { Service } from '@/types/service'
+import { formatPhone } from '@/lib/utils'
 import {
   Plus,
   Search,
@@ -431,7 +432,13 @@ export function ProfessionalsPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="create-phone">Telefone</Label>
-                <Input id="create-phone" placeholder="(11) 99999-0000" {...createForm.register('phone')} />
+                <Input
+                  id="create-phone"
+                  placeholder="(11) 99999-0000"
+                  maxLength={15}
+                  {...createForm.register('phone')}
+                  onChange={(e) => createForm.setValue('phone', formatPhone(e.target.value))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="create-specialty">Especialidade</Label>
@@ -480,7 +487,13 @@ export function ProfessionalsPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="edit-phone">Telefone</Label>
-                <Input id="edit-phone" placeholder="(11) 99999-0000" {...editForm.register('phone')} />
+                <Input
+                  id="edit-phone"
+                  placeholder="(11) 99999-0000"
+                  maxLength={15}
+                  {...editForm.register('phone')}
+                  onChange={(e) => editForm.setValue('phone', formatPhone(e.target.value))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="edit-specialty">Especialidade</Label>

@@ -25,6 +25,20 @@ function getFirstDayOfMonth() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`
 }
 
+function getLastDayOfMonth() {
+  const d = new Date()
+  const last = new Date(d.getFullYear(), d.getMonth() + 1, 0)
+  return `${last.getFullYear()}-${String(last.getMonth() + 1).padStart(2, '0')}-${String(last.getDate()).padStart(2, '0')}`
+}
+
+function getWeekEnd() {
+  const d = new Date()
+  const day = d.getDay()
+  const diff = d.getDate() - day + 6
+  const sun = new Date(new Date(d).setDate(diff))
+  return `${sun.getFullYear()}-${String(sun.getMonth() + 1).padStart(2, '0')}-${String(sun.getDate()).padStart(2, '0')}`
+}
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 }
@@ -62,7 +76,11 @@ export function DashboardPage() {
         : customFrom
 
   const to =
-    preset === 'custom' ? customTo : getTodayString()
+    preset === 'month'
+      ? getLastDayOfMonth()
+      : preset === 'week'
+        ? getWeekEnd()
+        : customTo
 
   const { data: statsRes, isLoading } = useQuery({
     queryKey: ['dashboard-stats', from, to],

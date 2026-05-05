@@ -16,6 +16,7 @@ import { authService } from '@/services/auth.service'
 import { getApiError } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth.store'
 import { getRoleRedirect } from '@/lib/role-redirect'
+import { formatPhone } from '@/lib/utils'
 import { Mail, Lock, User, Phone, CalendarCheck, Clock, Users, Loader2 } from 'lucide-react'
 
 const registerSchema = z.object({
@@ -176,10 +177,12 @@ export function RegisterPage() {
                       <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         {...field}
+                        onChange={(e) => field.onChange(formatPhone(e.target.value))}
                         id={field.name}
                         placeholder="(11) 99999-0000"
                         className="pl-10"
                         aria-invalid={fieldState.invalid}
+                        maxLength={15}
                       />
                     </div>
                   </Field>

@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/dialog'
 import { customersService } from '@/services/customers.service'
 import { getApiError } from '@/lib/api'
+import { formatPhone } from '@/lib/utils'
 import type { Customer } from '@/types/customer'
 import { Plus, Search, Pencil, Trash2, Loader2 } from 'lucide-react'
 
@@ -289,7 +290,13 @@ export function CustomersPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="create-phone">Telefone</Label>
-                <Input id="create-phone" placeholder="(11) 99999-0000" {...createForm.register('phone')} />
+                <Input
+                  id="create-phone"
+                  placeholder="(11) 99999-0000"
+                  maxLength={15}
+                  {...createForm.register('phone')}
+                  onChange={(e) => createForm.setValue('phone', formatPhone(e.target.value))}
+                />
               </div>
             </div>
             <div className="space-y-2">
@@ -341,7 +348,13 @@ export function CustomersPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-phone">Telefone</Label>
-              <Input id="edit-phone" placeholder="(11) 99999-0000" {...editForm.register('phone')} />
+              <Input
+                id="edit-phone"
+                placeholder="(11) 99999-0000"
+                maxLength={15}
+                {...editForm.register('phone')}
+                onChange={(e) => editForm.setValue('phone', formatPhone(e.target.value))}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-notes">Observações</Label>

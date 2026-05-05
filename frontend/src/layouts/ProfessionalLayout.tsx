@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
 import { useAuthStore } from '@/stores/auth.store'
+import { NotificationBell } from '@/components/NotificationBell'
 import { CalendarDays, Menu, LogOut } from 'lucide-react'
 
 const navItems = [
@@ -13,6 +14,7 @@ const navItems = [
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
+  const user = useAuthStore((s) => s.user)
 
   function handleLogout() {
     logout()
@@ -47,7 +49,13 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
       <Separator />
-      <div className="p-4">
+      <div className="p-4 space-y-2">
+        {user && (
+          <div className="px-3 py-1">
+            <p className="text-sm font-medium truncate">{user.name}</p>
+            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          </div>
+        )}
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 text-muted-foreground"
@@ -82,8 +90,14 @@ export function ProfessionalLayout() {
               <NavContent onNavigate={() => setSheetOpen(false)} />
             </SheetContent>
           </Sheet>
-          <h1 className="text-lg font-bold">Marquei</h1>
+          <h1 className="text-lg font-bold flex-1">Marquei</h1>
+          <NotificationBell />
         </header>
+
+        {/* Desktop notification bar */}
+        <div className="hidden h-14 items-center justify-end border-b bg-card px-6 lg:flex">
+          <NotificationBell />
+        </div>
 
         <main className="flex-1 p-4 sm:p-6">
           <Outlet />

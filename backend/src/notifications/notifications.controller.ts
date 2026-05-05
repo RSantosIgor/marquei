@@ -9,13 +9,13 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @Get('my')
-  @Roles(Role.CLIENT)
+  @Roles(Role.CLIENT, Role.PROFESSIONAL)
   async findMyNotifications(@CurrentUser('sub') userId: string) {
     return this.notificationsService.findMyNotifications(userId);
   }
 
   @Patch(':id/read')
-  @Roles(Role.CLIENT)
+  @Roles(Role.CLIENT, Role.PROFESSIONAL)
   async markRead(@CurrentUser('sub') userId: string, @Param('id') id: string) {
     await this.notificationsService.markRead(userId, id);
     return { data: { success: true } };

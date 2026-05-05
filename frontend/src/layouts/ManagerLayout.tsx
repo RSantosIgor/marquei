@@ -27,6 +27,7 @@ const navItems = [
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const navigate = useNavigate()
   const logout = useAuthStore((s) => s.logout)
+  const user = useAuthStore((s) => s.user)
 
   function handleLogout() {
     logout()
@@ -61,7 +62,13 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
       <Separator />
-      <div className="p-4">
+      <div className="p-4 space-y-2">
+        {user && (
+          <div className="px-3 py-1">
+            <p className="text-sm font-medium truncate">{user.name}</p>
+            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          </div>
+        )}
         <Button
           variant="ghost"
           className="w-full justify-start gap-3 text-muted-foreground"
