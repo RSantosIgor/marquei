@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
+import { queryClient } from '@/lib/query-client'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { RegisterPage } from '@/pages/auth/RegisterPage'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
@@ -19,14 +20,6 @@ import { MyAppointmentsPage } from '@/pages/customer/MyAppointmentsPage'
 import { useAuthStore } from '@/stores/auth.store'
 import { getRoleRedirect } from '@/lib/role-redirect'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5,
-      retry: 1,
-    },
-  },
-})
 
 function RootRedirect() {
   const { isAuthenticated, user } = useAuthStore()

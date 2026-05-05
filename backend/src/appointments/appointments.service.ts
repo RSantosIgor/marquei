@@ -84,7 +84,7 @@ export class AppointmentsService {
     if (!professional)
       throw new NotFoundException('Profissional não encontrado');
 
-    const dateObj = new Date(date + 'T00:00:00');
+    const dateObj = new Date(date + 'T12:00:00.000Z');
     const dayOfWeek = dateObj.getUTCDay();
 
     const schedules = professional.workSchedules.filter(
@@ -189,7 +189,7 @@ export class AppointmentsService {
     try {
       const appointment = await this.prisma.$transaction(async (tx) => {
         // Serialize concurrent bookings for the same professional
-        await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${dto.professionalId}))`;
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${dto.professionalId}))`;
 
         const overlap = await tx.appointment.findFirst({
           where: {
@@ -268,7 +268,8 @@ export class AppointmentsService {
       }
       // Exclusion constraint violation (safety net)
       if (
-        error instanceof Prisma.PrismaClientKnownRequestError ||
+        (error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2002') ||
         (error as any)?.code === '23P01'
       ) {
         throw new ConflictException('Horário já está ocupado');
@@ -338,7 +339,7 @@ export class AppointmentsService {
 
     try {
       const updated = await this.prisma.$transaction(async (tx) => {
-        await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${appointment.professionalId}))`;
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${appointment.professionalId}))`;
 
         const overlap = await tx.appointment.findFirst({
           where: {
@@ -419,7 +420,8 @@ export class AppointmentsService {
         throw error;
       }
       if (
-        error instanceof Prisma.PrismaClientKnownRequestError ||
+        (error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2002') ||
         (error as any)?.code === '23P01'
       ) {
         throw new ConflictException('Novo horário já está ocupado');
