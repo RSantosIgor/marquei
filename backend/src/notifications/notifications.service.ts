@@ -18,7 +18,7 @@ export class NotificationsService {
     type: NotificationType,
     delay?: number,
   ): Promise<void> {
-    const jobId = `${appointmentId}-${type}`;
+    const jobId = `${appointmentId}-${type}-${userId}`;
     const data: NotificationJobData = { appointmentId, userId, type };
     await this.notificationsQueue.add('send-notification', data, {
       jobId,

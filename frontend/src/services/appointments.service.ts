@@ -57,6 +57,7 @@ export const appointmentsService = {
     dateTo?: string
     professionalId?: string
     serviceId?: string
+    customerId?: string
     status?: AppointmentStatus
     page?: number
     limit?: number

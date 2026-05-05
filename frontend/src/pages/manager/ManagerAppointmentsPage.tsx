@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dialog'
 import { appointmentsService } from '@/services/appointments.service'
 import { professionalsService } from '@/services/professionals.service'
+import { customersService } from '@/services/customers.service'
 import { getApiError } from '@/lib/api'
 import type { Appointment, AppointmentStatus } from '@/types/appointment'
 import {
@@ -344,6 +345,7 @@ function HistoryView() {
   const [dateFrom, setDateFrom] = useState(getFirstDayOfMonth())
   const [dateTo, setDateTo] = useState(getTodayString())
   const [professionalId, setProfessionalId] = useState<string>('__all__')
+  const [customerId, setCustomerId] = useState<string>('__all__')
   const [statusFilter, setStatusFilter] = useState<string>('__all__')
   const [page, setPage] = useState(1)
 
@@ -352,13 +354,19 @@ function HistoryView() {
     queryFn: () => professionalsService.getAll({ limit: 100 }),
   })
 
+  const { data: customersRes } = useQuery({
+    queryKey: ['manager-customers-list'],
+    queryFn: () => customersService.getAll({ limit: 100 }),
+  })
+
   const { data: historyRes, isLoading } = useQuery({
-    queryKey: ['manager-history', dateFrom, dateTo, professionalId, statusFilter, page],
+    queryKey: ['manager-history', dateFrom, dateTo, professionalId, customerId, statusFilter, page],
     queryFn: () =>
       appointmentsService.getHistory({
         dateFrom: dateFrom || undefined,
         dateTo: dateTo || undefined,
         professionalId: professionalId === '__all__' ? undefined : professionalId,
+        customerId: customerId === '__all__' ? undefined : customerId,
         status: statusFilter === '__all__' ? undefined : (statusFilter as AppointmentStatus),
         page,
         limit: 20,
@@ -366,6 +374,7 @@ function HistoryView() {
   })
 
   const professionals = professionalsRes?.data?.data ?? []
+  const customers = customersRes?.data?.data ?? []
   const appointments = historyRes?.data?.data ?? []
   const meta = historyRes?.data?.meta
 
@@ -393,6 +402,21 @@ function HistoryView() {
               <SelectItem value="__all__">Todos</SelectItem>
               {professionals.map((p) => (
                 <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-1">
+          <Label>Cliente</Label>
+          <Select value={customerId} onValueChange={(v) => { setCustomerId(v); setPage(1) }}>
+            <SelectTrigger className="w-full sm:w-[200px]">
+              <SelectValue placeholder="Todos" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">Todos</SelectItem>
+              {customers.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>

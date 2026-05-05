@@ -221,13 +221,21 @@ export class AppointmentsService {
       });
 
       const mapped = this.mapAppointment(appointment);
+      const professionalUserId = appointment.professional.userId;
 
-      // Dispatch confirmation notification (fire-and-forget)
+      // Dispatch confirmation notification to client and professional (fire-and-forget)
       void this.notificationsService
         .dispatch(appointment.id, userId, NotificationType.CONFIRMATION)
         .catch(() => null);
+      void this.notificationsService
+        .dispatch(
+          appointment.id,
+          professionalUserId,
+          NotificationType.CONFIRMATION,
+        )
+        .catch(() => null);
 
-      // Dispatch 24h reminder as delayed job
+      // Dispatch 24h reminder as delayed job for both
       const reminderDelay =
         appointment.startTime.getTime() - Date.now() - 24 * 60 * 60 * 1000;
       if (reminderDelay > 0) {
@@ -235,6 +243,14 @@ export class AppointmentsService {
           .dispatch(
             appointment.id,
             userId,
+            NotificationType.REMINDER_24H,
+            reminderDelay,
+          )
+          .catch(() => null);
+        void this.notificationsService
+          .dispatch(
+            appointment.id,
+            professionalUserId,
             NotificationType.REMINDER_24H,
             reminderDelay,
           )
@@ -349,16 +365,29 @@ export class AppointmentsService {
       });
 
       const mapped = this.mapAppointment(updated);
+      const professionalUserId = updated.professional.userId;
 
-      // Remove old reminder and dispatch reschedule + new reminder
+      // Remove old reminders for both client and professional
       void this.notificationsService
-        .removeDelayedJob(`${appointment.id}-${NotificationType.REMINDER_24H}`)
+        .removeDelayedJob(
+          `${appointment.id}-${NotificationType.REMINDER_24H}-${userId}`,
+        )
+        .catch(() => null);
+      void this.notificationsService
+        .removeDelayedJob(
+          `${appointment.id}-${NotificationType.REMINDER_24H}-${professionalUserId}`,
+        )
         .catch(() => null);
 
+      // Dispatch reschedule notification to both
       void this.notificationsService
         .dispatch(updated.id, userId, NotificationType.RESCHEDULE)
         .catch(() => null);
+      void this.notificationsService
+        .dispatch(updated.id, professionalUserId, NotificationType.RESCHEDULE)
+        .catch(() => null);
 
+      // Dispatch new 24h reminders for both
       const newReminderDelay =
         newStart.getTime() - Date.now() - 24 * 60 * 60 * 1000;
       if (newReminderDelay > 0) {
@@ -366,6 +395,14 @@ export class AppointmentsService {
           .dispatch(
             updated.id,
             userId,
+            NotificationType.REMINDER_24H,
+            newReminderDelay,
+          )
+          .catch(() => null);
+        void this.notificationsService
+          .dispatch(
+            updated.id,
+            professionalUserId,
             NotificationType.REMINDER_24H,
             newReminderDelay,
           )
@@ -533,13 +570,26 @@ export class AppointmentsService {
       },
     });
 
-    // Remove pending reminder and dispatch cancellation notification
+    const professionalUserId = updated.professional.userId;
+
+    // Remove pending reminders for both client and professional
     void this.notificationsService
-      .removeDelayedJob(`${updated.id}-${NotificationType.REMINDER_24H}`)
+      .removeDelayedJob(
+        `${updated.id}-${NotificationType.REMINDER_24H}-${userId}`,
+      )
+      .catch(() => null);
+    void this.notificationsService
+      .removeDelayedJob(
+        `${updated.id}-${NotificationType.REMINDER_24H}-${professionalUserId}`,
+      )
       .catch(() => null);
 
+    // Dispatch cancellation notification to both
     void this.notificationsService
       .dispatch(updated.id, userId, NotificationType.CANCELLATION)
+      .catch(() => null);
+    void this.notificationsService
+      .dispatch(updated.id, professionalUserId, NotificationType.CANCELLATION)
       .catch(() => null);
 
     return this.mapAppointment(updated);
@@ -551,6 +601,7 @@ export class AppointmentsService {
       dateTo,
       professionalId,
       serviceId,
+      customerId,
       status,
       page = 1,
       limit = 20,
@@ -560,6 +611,7 @@ export class AppointmentsService {
     const where: Prisma.AppointmentWhereInput = {};
     if (professionalId) where.professionalId = professionalId;
     if (serviceId) where.serviceId = serviceId;
+    if (customerId) where.customerId = customerId;
     if (status) where.status = status;
 
     if (dateFrom || dateTo) {

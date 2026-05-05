@@ -24,7 +24,7 @@ export class NotificationsProcessor extends WorkerHost {
     try {
       await this.prisma.notification.upsert({
         where: {
-          appointmentId_type: { appointmentId, type },
+          appointmentId_type_userId: { appointmentId, type, userId },
         },
         update: { sentAt: new Date() },
         create: { userId, appointmentId, type, sentAt: new Date() },

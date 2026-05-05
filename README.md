@@ -1,55 +1,57 @@
 # Marquei
 
-Online scheduling platform for beauty salons and aesthetic clinics. Replaces manual spreadsheet/phone processes with an automated booking system with role-based access, async notifications, and bulk client imports.
+Plataforma de agendamento online para salões de beleza e clínicas de estética. Substitui processos manuais em planilhas e telefone por um sistema automatizado de agendamento com controle de acesso por perfil, notificações assíncronas e importação em massa de clientes.
 
-## Tech Stack
+## Stack Tecnológica
 
-| Layer | Technology |
+| Camada | Tecnologia |
 |---|---|
 | Frontend | React 18 + Vite + TypeScript |
 | UI | shadcn/ui + Tailwind CSS v4 |
 | Backend | NestJS + TypeScript |
-| Database | PostgreSQL 16 + Prisma ORM |
-| Queue | BullMQ + Redis 7 |
-| Auth | JWT (access + refresh), bcrypt, RBAC |
+| Banco de dados | PostgreSQL 16 + Prisma ORM |
+| Fila | BullMQ + Redis 7 |
+| Autenticação | JWT (access + refresh), bcrypt, RBAC |
 | Infra | Docker Compose |
 
-## Project Structure
+**Por que essa stack?** O NestJS foi escolhido pela arquitetura modular, injeção de dependência nativa e suporte de primeira classe a TypeScript — que combina naturalmente com o ORM tipado do Prisma. React + Vite entrega feedback rápido no desenvolvimento e um rico ecossistema de componentes via shadcn/ui. O PostgreSQL foi escolhido em vez do MySQL por suportar exclusion constraints (`btree_gist` + `tsrange`), que funcionam como uma camada de segurança no banco contra double-booking. BullMQ + Redis tratam cargas de trabalho assíncronas (notificações, importações) sem adicionar complexidade de infraestrutura além de uma única instância Redis.
+
+## Estrutura do Projeto
 
 ```
 marquei/
-├── frontend/               # React + Vite SPA
+├── frontend/               # SPA React + Vite
 │   └── src/
-│       ├── components/ui/  # shadcn/ui components
-│       ├── pages/          # Route pages (manager/, professional/, customer/, auth/)
-│       ├── layouts/        # Role-based layouts
-│       ├── services/       # Axios API call functions
-│       ├── stores/         # Zustand stores (auth, UI)
+│       ├── components/ui/  # Componentes shadcn/ui
+│       ├── pages/          # Páginas por perfil (manager/, professional/, customer/, auth/)
+│       ├── layouts/        # Layouts por perfil
+│       ├── services/       # Funções de chamada à API (axios)
+│       ├── stores/         # Stores Zustand (auth, UI)
 │       └── hooks/          # Custom React hooks
-├── backend/                # NestJS API
+├── backend/                # API NestJS
 │   ├── src/
-│   │   ├── auth/           # JWT auth, guards, decorators
-│   │   ├── appointments/   # Booking, availability, status
-│   │   ├── professionals/  # Professionals + work schedules
-│   │   ├── services/       # Salon services (CRUD)
-│   │   ├── customers/      # Customer management
-│   │   ├── dashboard/      # Aggregated stats
-│   │   ├── imports/        # CSV/XLSX bulk import
-│   │   ├── notifications/  # BullMQ notification workers
-│   │   └── common/         # Guards, decorators, filters
+│   │   ├── auth/           # Auth JWT, guards, decorators
+│   │   ├── appointments/   # Agendamento, disponibilidade, status
+│   │   ├── professionals/  # Profissionais + jornadas de trabalho
+│   │   ├── services/       # Serviços do salão (CRUD)
+│   │   ├── customers/      # Gestão de clientes
+│   │   ├── dashboard/      # Indicadores agregados
+│   │   ├── imports/        # Importação em massa CSV/XLSX
+│   │   ├── notifications/  # Workers BullMQ de notificações
+│   │   └── common/         # Guards, decorators, filtros
 │   └── prisma/             # Schema + migrations + seed
 ├── docker-compose.yml
-└── PLANEJAMENTO.md         # Full project plan (pt-BR)
+└── PLANEJAMENTO.md         # Plano completo do projeto
 ```
 
-## Prerequisites
+## Pré-requisitos
 
 - Node.js 20+
 - Docker + Docker Compose
 
-## Running in Development
+## Rodando em Desenvolvimento
 
-### 1. Start infrastructure
+### 1. Subir a infraestrutura
 
 ```bash
 docker compose up -d postgres redis
@@ -59,11 +61,11 @@ docker compose up -d postgres redis
 
 ```bash
 cd backend
-cp .env.example .env          # configure environment variables
+cp .env.example .env          # configurar variáveis de ambiente
 npm install
-npx prisma migrate dev        # run migrations
-npx prisma db seed            # seed with demo data
-npm run start:dev             # starts on http://localhost:3000
+npx prisma migrate dev        # executar migrations
+npx prisma db seed            # popular com dados de demonstração
+npm run start:dev             # inicia em http://localhost:3000
 ```
 
 ### 3. Frontend
@@ -71,228 +73,228 @@ npm run start:dev             # starts on http://localhost:3000
 ```bash
 cd frontend
 npm install
-npm run dev                   # starts on http://localhost:5173
+npm run dev                   # inicia em http://localhost:5173
 ```
 
-### Running with Docker Compose (full stack)
+### Rodando com Docker Compose (stack completa)
 
 ```bash
 docker compose up -d
 ```
 
-Services exposed:
+Serviços expostos:
 - **Frontend:** http://localhost:5173
 - **Backend API:** http://localhost:3000
 - **pgAdmin:** http://localhost:5050 (admin@marquei.com / admin)
 
-## Environment Variables
+## Variáveis de Ambiente
 
-Copy `backend/.env.example` to `backend/.env` and fill in the values.
+Copie `backend/.env.example` para `backend/.env` e preencha os valores.
 
-| Variable | Description | Default |
+| Variável | Descrição | Padrão |
 |---|---|---|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://marquei:marquei@localhost:5432/marquei` |
-| `REDIS_HOST` | Redis host | `localhost` |
-| `REDIS_PORT` | Redis port | `6379` |
-| `JWT_SECRET` | Access token signing secret | — |
-| `JWT_REFRESH_SECRET` | Refresh token signing secret | — |
-| `JWT_EXPIRATION` | Access token TTL | `15m` |
-| `JWT_REFRESH_EXPIRATION` | Refresh token TTL | `7d` |
-| `PORT` | HTTP server port | `3000` |
+| `DATABASE_URL` | String de conexão PostgreSQL | `postgresql://marquei:marquei@localhost:5432/marquei` |
+| `REDIS_HOST` | Host do Redis | `localhost` |
+| `REDIS_PORT` | Porta do Redis | `6379` |
+| `JWT_SECRET` | Segredo para assinar o access token | — |
+| `JWT_REFRESH_SECRET` | Segredo para assinar o refresh token | — |
+| `JWT_EXPIRATION` | TTL do access token | `15m` |
+| `JWT_REFRESH_EXPIRATION` | TTL do refresh token | `7d` |
+| `PORT` | Porta do servidor HTTP | `3000` |
 
-> **Production:** Always use strong, unique values for `JWT_SECRET` and `JWT_REFRESH_SECRET`.
+> **Produção:** Sempre use valores fortes e únicos para `JWT_SECRET` e `JWT_REFRESH_SECRET`.
 
-## Database Commands
+## Comandos do Banco de Dados
 
 ```bash
 cd backend
 
-npx prisma migrate dev        # create and run a new migration
-npx prisma migrate deploy     # run pending migrations (production)
-npx prisma generate           # regenerate Prisma client after schema changes
-npx prisma db seed            # seed with demo data
-npm run db:reset              # reset DB, re-run all migrations, and re-seed
-npx prisma studio             # open visual DB browser at http://localhost:5555
+npx prisma migrate dev        # criar e executar uma nova migration
+npx prisma migrate deploy     # executar migrations pendentes (produção)
+npx prisma generate           # regenerar o Prisma client após mudanças no schema
+npx prisma db seed            # popular com dados de demonstração
+npm run db:reset              # resetar o banco, re-executar todas as migrations e o seed
+npx prisma studio             # abrir o navegador visual do banco em http://localhost:5555
 ```
 
-## Test Accounts (seed)
+## Contas de Teste (seed)
 
-| Role | Email | Password |
+| Perfil | E-mail | Senha |
 |---|---|---|
-| Manager | gerente@marquei.com | senha123 |
-| Professional | ana@marquei.com | senha123 |
-| Professional | bruno@marquei.com | senha123 |
-| Professional | carla@marquei.com | senha123 |
-| Client | cliente1@marquei.com | senha123 |
+| Gestor | gestor@marquei.com | 123456 |
+| Profissional | carla@marquei.com | 123456 |
+| Profissional | marcos@marquei.com | 123456 |
+| Profissional | julia@marquei.com | 123456 |
+| Cliente | maria@email.com | 123456 |
 
-## API Endpoints
+## Endpoints da API
 
-All endpoints are served from `http://localhost:3000`.
+Todos os endpoints são servidos a partir de `http://localhost:3000`.
 
-Authentication uses JWT Bearer tokens. Public routes are marked `[public]`. All others require `Authorization: Bearer <token>`.
+A autenticação usa tokens JWT Bearer. Rotas públicas estão marcadas com `[público]`. As demais exigem `Authorization: Bearer <token>`.
 
 ### Auth
 
-| Method | Path | Auth | Description |
+| Método | Rota | Auth | Descrição |
 |---|---|---|---|
-| `POST` | `/auth/register` | public | Register new user |
-| `POST` | `/auth/login` | public | Authenticate, returns access + refresh tokens |
-| `POST` | `/auth/refresh` | public | Exchange refresh token for new access token |
-| `GET` | `/auth/me` | any role | Get current user profile |
+| `POST` | `/auth/register` | público | Registrar novo usuário |
+| `POST` | `/auth/login` | público | Autenticar, retorna access + refresh tokens |
+| `POST` | `/auth/refresh` | público | Trocar refresh token por novo access token |
+| `GET` | `/auth/me` | qualquer perfil | Obter perfil do usuário atual |
 
-### Services (MANAGER)
+### Serviços (GESTOR)
 
-| Method | Path | Description |
+| Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/services` | Create a service |
-| `GET` | `/services` | List services (`?page=&limit=&search=`) |
-| `GET` | `/services/:id` | Get service by ID |
-| `PATCH` | `/services/:id` | Update service |
-| `DELETE` | `/services/:id` | Delete service |
+| `POST` | `/services` | Criar serviço |
+| `GET` | `/services` | Listar serviços (`?page=&limit=&search=`) |
+| `GET` | `/services/:id` | Buscar serviço por ID |
+| `PATCH` | `/services/:id` | Atualizar serviço |
+| `DELETE` | `/services/:id` | Desativar serviço |
 
-### Professionals (MANAGER)
+### Profissionais (GESTOR)
 
-| Method | Path | Description |
+| Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/professionals` | Create professional |
-| `GET` | `/professionals` | List professionals (`?page=&limit=&search=`) |
-| `GET` | `/professionals/:id` | Get professional |
-| `PATCH` | `/professionals/:id` | Update professional |
-| `DELETE` | `/professionals/:id` | Delete professional |
-| `PUT` | `/professionals/:id/schedule` | Replace full work schedule |
-| `PUT` | `/professionals/:id/services` | Set linked services |
+| `POST` | `/professionals` | Criar profissional |
+| `GET` | `/professionals` | Listar profissionais (`?page=&limit=&search=`) |
+| `GET` | `/professionals/:id` | Buscar profissional |
+| `PATCH` | `/professionals/:id` | Atualizar profissional |
+| `DELETE` | `/professionals/:id` | Desativar profissional |
+| `PUT` | `/professionals/:id/schedule` | Substituir jornada semanal completa |
+| `PUT` | `/professionals/:id/services` | Definir serviços vinculados |
 
-### Customers (MANAGER)
+### Clientes (GESTOR)
 
-| Method | Path | Description |
+| Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/customers` | Create customer |
-| `GET` | `/customers` | List customers (`?page=&limit=&search=`) |
-| `GET` | `/customers/:id` | Get customer |
-| `PATCH` | `/customers/:id` | Update customer |
-| `DELETE` | `/customers/:id` | Delete customer |
+| `POST` | `/customers` | Criar cliente |
+| `GET` | `/customers` | Listar clientes (`?page=&limit=&search=`) |
+| `GET` | `/customers/:id` | Buscar cliente |
+| `PATCH` | `/customers/:id` | Atualizar cliente |
+| `DELETE` | `/customers/:id` | Desativar cliente |
 
-### Appointments
+### Agendamentos
 
-| Method | Path | Auth | Description |
+| Método | Rota | Auth | Descrição |
 |---|---|---|---|
-| `GET` | `/appointments/services` | CLIENT | List services available for booking |
-| `GET` | `/appointments/professionals` | CLIENT | List professionals for a service (`?serviceId=`) |
-| `GET` | `/appointments/availability` | CLIENT | Get available time slots (`?professionalId=&serviceId=&date=YYYY-MM-DD`) |
-| `POST` | `/appointments` | CLIENT | Book an appointment |
-| `GET` | `/appointments/mine` | CLIENT | List own appointments |
-| `PATCH` | `/appointments/:id/reschedule` | CLIENT | Reschedule appointment |
-| `PATCH` | `/appointments/:id/cancel` | CLIENT | Cancel appointment (24h policy) |
-| `GET` | `/appointments/all` | MANAGER | List all appointments with filters |
-| `GET` | `/appointments/history` | MANAGER | Appointment history |
-| `GET` | `/appointments/my-schedule` | PROFESSIONAL | Daily schedule (`?date=YYYY-MM-DD`) |
-| `PATCH` | `/appointments/:id/status` | PROFESSIONAL, MANAGER | Update appointment status |
+| `GET` | `/appointments/services` | CLIENTE | Listar serviços disponíveis para agendamento |
+| `GET` | `/appointments/professionals` | CLIENTE | Listar profissionais para um serviço (`?serviceId=`) |
+| `GET` | `/appointments/availability` | CLIENTE | Obter horários disponíveis (`?professionalId=&serviceId=&date=YYYY-MM-DD`) |
+| `POST` | `/appointments` | CLIENTE | Realizar agendamento |
+| `GET` | `/appointments/mine` | CLIENTE | Listar meus agendamentos |
+| `PATCH` | `/appointments/:id/reschedule` | CLIENTE | Remarcar agendamento |
+| `PATCH` | `/appointments/:id/cancel` | CLIENTE | Cancelar agendamento (regra 24h) |
+| `GET` | `/appointments/all` | GESTOR | Listar todos os agendamentos com filtros |
+| `GET` | `/appointments/history` | GESTOR | Histórico de agendamentos |
+| `GET` | `/appointments/my-schedule` | PROFISSIONAL | Agenda do dia (`?date=YYYY-MM-DD`) |
+| `PATCH` | `/appointments/:id/status` | PROFISSIONAL, GESTOR | Atualizar status do agendamento |
 
-**Appointment status transitions:**
+**Transições de status:**
 - `SCHEDULED` → `COMPLETED` | `NO_SHOW` | `CANCELLED`
-- Terminal states (`COMPLETED`, `NO_SHOW`, `CANCELLED`) cannot transition further
+- Estados terminais (`COMPLETED`, `NO_SHOW`, `CANCELLED`) não permitem novas transições
 
-### Dashboard (MANAGER)
+### Dashboard (GESTOR)
 
-| Method | Path | Description |
+| Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/dashboard/stats` | Aggregated stats (`?from=YYYY-MM-DD&to=YYYY-MM-DD`) |
+| `GET` | `/dashboard/stats` | Indicadores agregados (`?from=YYYY-MM-DD&to=YYYY-MM-DD`) |
 
-### Imports (MANAGER)
+### Importações (GESTOR)
 
-| Method | Path | Description |
+| Método | Rota | Descrição |
 |---|---|---|
-| `POST` | `/imports/upload` | Upload CSV or XLSX file (multipart/form-data, field: `file`, max 10 MB) |
-| `GET` | `/imports` | List import jobs |
-| `GET` | `/imports/:id` | Get import job with row-level results |
+| `POST` | `/imports/upload` | Enviar arquivo CSV ou XLSX (multipart/form-data, campo: `file`, máx 10 MB) |
+| `GET` | `/imports` | Listar jobs de importação |
+| `GET` | `/imports/:id` | Buscar job de importação com resultados por linha |
 
-### Notifications (CLIENT)
+### Notificações (CLIENTE)
 
-| Method | Path | Description |
+| Método | Rota | Descrição |
 |---|---|---|
-| `GET` | `/notifications/my` | List own notifications |
-| `PATCH` | `/notifications/:id/read` | Mark notification as read |
+| `GET` | `/notifications/my` | Listar minhas notificações |
+| `PATCH` | `/notifications/:id/read` | Marcar notificação como lida |
 
-### Response Format
+### Formato de Resposta
 
 ```json
-// Success (single resource)
+// Sucesso (recurso único)
 { "data": { ... } }
 
-// Success (list)
+// Sucesso (lista)
 { "data": [...], "meta": { "total": 100, "page": 1, "limit": 20, "totalPages": 5 } }
 
-// Error
-{ "statusCode": 404, "message": "Resource not found" }
+// Erro
+{ "statusCode": 404, "message": "Recurso não encontrado" }
 ```
 
-## Queue Architecture
+## Arquitetura de Filas
 
-Marquei uses **BullMQ** with **Redis** for two async queues.
+O Marquei usa **BullMQ** com **Redis** para duas filas assíncronas.
 
 ```
-Client Request
-     │
-     ▼
+Requisição do Cliente
+        │
+        ▼
 NestJS Controller
-     │
-     ├─ imports queue ──────► ImportsProcessor
-     │   (file content)            │
-     │                        parse CSV/XLSX
-     │                        validate rows
-     │                        create users + customers (transaction)
-     │                        update ImportJob status
-     │
-     └─ notifications queue ► NotificationsProcessor
-         (appointmentId,           │
-          type)               look up appointment
-                              record Notification row (idempotent)
-                              send (email/push — pluggable)
+        │
+        ├─ fila imports ────────► ImportsProcessor
+        │   (conteúdo do arquivo)       │
+        │                          parse CSV/XLSX
+        │                          validar linhas
+        │                          criar usuários + clientes (transação)
+        │                          atualizar status do ImportJob
+        │
+        └─ fila notifications ──► NotificationsProcessor
+            (appointmentId,              │
+             type)                 buscar agendamento
+                                   registrar Notification (idempotente)
+                                   enviar (e-mail/push — plugável)
 ```
 
-### Imports Queue (`imports`)
+### Fila de Importações (`imports`)
 
-Triggered when a manager uploads a CSV or XLSX file. The job payload contains the base64-encoded file content and job ID. Processing is **row-level fault-tolerant**: valid rows are imported even if others fail.
+Acionada quando o gestor envia um arquivo CSV ou XLSX. O payload do job contém o conteúdo do arquivo em base64 e o ID do job. O processamento é **tolerante a falhas por linha**: linhas válidas são importadas mesmo que outras falhem.
 
-Job lifecycle: `QUEUED` → `PROCESSING` → `COMPLETED` | `COMPLETED_WITH_ERRORS` | `FAILED`
+Ciclo de vida do job: `QUEUED` → `PROCESSING` → `COMPLETED` | `COMPLETED_WITH_ERRORS` | `FAILED`
 
-### Notifications Queue (`notifications`)
+### Fila de Notificações (`notifications`)
 
-Triggered after appointment events. Job IDs are deterministic (`${appointmentId}-${type}`) to make dispatch **idempotent** — duplicate events do not create duplicate notifications.
+Acionada após eventos de agendamento. Os IDs dos jobs são determinísticos (`${appointmentId}-${type}-${userId}`) para tornar o disparo **idempotente** — eventos duplicados não geram notificações duplicadas.
 
-Notification types: `CONFIRMATION`, `REMINDER_24H`, `CANCELLATION`, `RESCHEDULE`
+Tipos de notificação: `CONFIRMATION`, `REMINDER_24H`, `CANCELLATION`, `RESCHEDULE`
 
-## Double-Booking Prevention
+## Prevenção de Double-Booking
 
-Two complementary layers prevent overlapping appointments for the same professional:
+Duas camadas complementares evitam agendamentos sobrepostos para o mesmo profissional:
 
-1. **Application layer:** `prisma.$transaction()` with `SELECT ... FOR UPDATE` locks the professional's rows before inserting, serializing concurrent requests.
+1. **Camada de aplicação:** `prisma.$transaction()` com bloqueio advisory do PostgreSQL serializa requisições concorrentes antes de inserir.
 
-2. **Database layer:** PostgreSQL exclusion constraint using the `btree_gist` extension and a `tsrange` column rejects any insert that would overlap an existing appointment, even under race conditions that bypass the application lock.
+2. **Camada de banco:** Exclusion constraint do PostgreSQL usando a extensão `btree_gist` e uma coluna `tsrange` rejeita qualquer inserção que sobreponha um agendamento existente, mesmo sob condições de corrida que burlam o bloqueio da aplicação.
 
 ```sql
--- schema excerpt
+-- trecho do schema
 ALTER TABLE appointments
   ADD CONSTRAINT no_overlap
   EXCLUDE USING gist (professional_id WITH =, time_range WITH &&);
 ```
 
-## Running Tests
+## Rodando os Testes
 
 ```bash
 # Backend (Jest)
 cd backend
-npm test                       # run all unit tests
-npm test -- --no-coverage      # skip coverage report
-npm test -- --watch            # watch mode
+npm test                       # rodar todos os testes unitários
+npm test -- --no-coverage      # pular relatório de cobertura
+npm test -- --watch            # modo watch
 
 # Frontend (Vitest)
 cd frontend
-npm test                       # run all tests once
-npm run test:watch             # watch mode
+npm test                       # rodar todos os testes uma vez
+npm run test:watch             # modo watch
 ```
 
-## Linting
+## Lint
 
 ```bash
 cd backend && npm run lint
@@ -301,23 +303,34 @@ cd frontend && npm run lint
 
 ## CI
 
-GitHub Actions runs on every push and pull request to `main`:
-- **Backend job:** `npm ci` → `prisma generate` → `lint` → `test`
-- **Frontend job:** `npm ci` → `lint` → `test`
+O GitHub Actions executa em todo push e pull request para `main`:
+- **Job backend:** `npm ci` → `prisma generate` → `lint` → `test`
+- **Job frontend:** `npm ci` → `lint` → `test`
 
-See [.github/workflows/ci.yml](.github/workflows/ci.yml).
+Veja [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
-## Deploy Checklist
+## Checklist de Deploy
 
-- [ ] Set strong `JWT_SECRET` and `JWT_REFRESH_SECRET` (min 32 chars, random)
-- [ ] Set `DATABASE_URL` pointing to production PostgreSQL
-- [ ] Set `REDIS_HOST` / `REDIS_PORT` pointing to production Redis
-- [ ] Run `npx prisma migrate deploy` (not `migrate dev`)
-- [ ] Enable PostgreSQL `btree_gist` extension (`CREATE EXTENSION IF NOT EXISTS btree_gist;`)
-- [ ] Configure CORS origin in NestJS to match production frontend URL
-- [ ] Set `NODE_ENV=production`
-- [ ] Use a process manager (PM2, systemd) or container orchestration for zero-downtime restarts
-- [ ] Set up log aggregation for BullMQ job failures
-- [ ] Configure Redis persistence (`appendonly yes`) to survive restarts
-- [ ] Set up DB backups (pg_dump schedule or managed DB snapshots)
-- [ ] Run `npm run db:seed` only on first deploy; skip on subsequent deploys
+- [ ] Definir `JWT_SECRET` e `JWT_REFRESH_SECRET` fortes (mín. 32 chars, aleatórios)
+- [ ] Definir `DATABASE_URL` apontando para o PostgreSQL de produção
+- [ ] Definir `REDIS_HOST` / `REDIS_PORT` apontando para o Redis de produção
+- [ ] Executar `npx prisma migrate deploy` (não `migrate dev`)
+- [ ] Habilitar a extensão `btree_gist` no PostgreSQL (`CREATE EXTENSION IF NOT EXISTS btree_gist;`)
+- [ ] Configurar a origem CORS no NestJS para corresponder à URL do frontend em produção
+- [ ] Definir `NODE_ENV=production`
+- [ ] Usar um gerenciador de processos (PM2, systemd) ou orquestração de contêineres para restarts sem downtime
+- [ ] Configurar agregação de logs para falhas de jobs BullMQ
+- [ ] Configurar persistência do Redis (`appendonly yes`) para sobreviver a restarts
+- [ ] Configurar backups do banco (agendamento de pg_dump ou snapshots de banco gerenciado)
+- [ ] Executar `npm run db:seed` apenas no primeiro deploy; pular nos subsequentes
+
+## O Que Ficou de Fora
+
+Com mais tempo, estas são as áreas que eu melhoraria:
+
+- **Envio de e-mail/SMS:** As notificações são atualmente persistidas no banco e expostas via API, mas nenhum e-mail ou push notification é enviado de fato. A arquitetura está pronta — o `NotificationsProcessor` é o ponto de integração com SendGrid, SES ou Twilio.
+- **Testes de frontend:** O backend possui testes unitários e e2e para os fluxos críticos (agendamentos, importações, double-booking), mas a cobertura de testes do frontend é mínima. Eu adicionaria testes com React Testing Library para o fluxo de agendamento e o dashboard do gestor.
+- **Atualizações em tempo real:** As visões de agenda do gestor e do profissional dependem de refresh manual ou re-fetch. WebSockets (via `@nestjs/websockets`) ou Server-Sent Events proporcionariam atualizações ao vivo quando novos agendamentos forem criados ou o status mudar.
+- **Importação de agendamentos:** A importação em massa atualmente suporta apenas cadastros de clientes. Estendê-la para importar agendamentos históricos (como o case menciona) exigiria mapear nomes de profissionais e serviços da planilha para registros existentes no banco.
+- **Rate limiting:** Não há limitação de taxa implementada. Em produção, os endpoints de autenticação (`/login`, `/register`) deveriam ser protegidos contra ataques de força bruta.
+- **Log de auditoria:** Não existe histórico de alterações para agendamentos ou transições de status. Um rastro de auditoria seria valioso para resolução de disputas.
