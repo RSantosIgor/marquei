@@ -543,6 +543,31 @@ export class AppointmentsService {
       },
     });
 
+    if (dto.status === AppointmentStatus.CANCELLED) {
+      const clientUserId = updated.customer.userId;
+      const professionalUserId = updated.professional.userId;
+
+      // Remove pending reminders for both
+      void this.notificationsService
+        .removeDelayedJob(
+          `${updated.id}-${NotificationType.REMINDER_24H}-${clientUserId}`,
+        )
+        .catch(() => null);
+      void this.notificationsService
+        .removeDelayedJob(
+          `${updated.id}-${NotificationType.REMINDER_24H}-${professionalUserId}`,
+        )
+        .catch(() => null);
+
+      // Dispatch cancellation notification to both
+      void this.notificationsService
+        .dispatch(updated.id, clientUserId, NotificationType.CANCELLATION)
+        .catch(() => null);
+      void this.notificationsService
+        .dispatch(updated.id, professionalUserId, NotificationType.CANCELLATION)
+        .catch(() => null);
+    }
+
     return this.mapAppointment(updated);
   }
 

@@ -119,13 +119,24 @@ npx prisma studio             # abrir o navegador visual do banco em http://loca
 
 ## Contas de Teste (seed)
 
-| Perfil | E-mail | Senha |
+Todos os usuários abaixo são criados pelo `npx prisma db seed`. A senha de todos é `123456`.
+
+| Perfil | Nome | E-mail |
 |---|---|---|
-| Gestor | gestor@marquei.com | 123456 |
-| Profissional | carla@marquei.com | 123456 |
-| Profissional | marcos@marquei.com | 123456 |
-| Profissional | julia@marquei.com | 123456 |
-| Cliente | maria@email.com | 123456 |
+| Gestor | Ana Silva | gestor@marquei.com |
+| Profissional | Carla Oliveira (Cabelo) | carla@marquei.com |
+| Profissional | Marcos Santos (Barba) | marcos@marquei.com |
+| Profissional | Julia Costa (Unhas) | julia@marquei.com |
+| Cliente | Maria Fernandes | maria@email.com |
+| Cliente | João Pereira | joao@email.com |
+| Cliente | Camila Lima | camila@email.com |
+| Cliente | Pedro Almeida | pedro@email.com |
+| Cliente | Fernanda Souza | fernanda@email.com |
+| Cliente | Lucas Martins | lucas@email.com |
+| Cliente | Beatriz Rocha | beatriz@email.com |
+| Cliente | Rafael Dias | rafael@email.com |
+| Cliente | Larissa Gomes | larissa@email.com |
+| Cliente | Thiago Ribeiro | thiago@email.com |
 
 ## Endpoints da API
 

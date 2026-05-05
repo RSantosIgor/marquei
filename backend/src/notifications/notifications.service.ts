@@ -43,6 +43,7 @@ export class NotificationsService {
           include: {
             service: { select: { name: true } },
             professional: { include: { user: { select: { name: true } } } },
+            customer: { include: { user: { select: { name: true } } } },
           },
         },
       },
@@ -62,6 +63,7 @@ export class NotificationsService {
           startTime: n.appointment.startTime,
           serviceName: n.appointment.service?.name,
           professionalName: n.appointment.professional?.user?.name,
+          customerName: n.appointment.customer?.user?.name,
         },
       })),
     };

@@ -11,5 +11,6 @@ export interface Notification {
     startTime: string
     serviceName: string | null
     professionalName: string | null
+    customerName: string | null
   }
 }

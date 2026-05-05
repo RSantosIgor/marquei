@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -57,6 +57,7 @@ function getTodayString() {
 
 export function NewAppointmentPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [step, setStep] = useState<Step>('service')
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [selectedProfessional, setSelectedProfessional] =
@@ -106,6 +107,7 @@ export function NewAppointmentPage() {
       }),
     onSuccess: () => {
       toast.success('Agendamento realizado com sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['my-appointments'] })
       navigate('/customer/appointments')
     },
     onError: (err: unknown) => {

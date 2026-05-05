@@ -93,7 +93,12 @@ export function NotificationBell() {
               </span>
               {n.appointment.professionalName && (
                 <span className="text-xs text-muted-foreground">
-                  com {n.appointment.professionalName}
+                  Profissional: {n.appointment.professionalName}
+                </span>
+              )}
+              {n.appointment.customerName && (
+                <span className="text-xs text-muted-foreground">
+                  Cliente: {n.appointment.customerName}
                 </span>
               )}
             </DropdownMenuItem>
