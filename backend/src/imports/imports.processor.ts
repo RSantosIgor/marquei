@@ -45,7 +45,9 @@ export class ImportsProcessor extends WorkerHost {
         rows = await this.parseExcel(buffer);
       }
     } catch (err) {
-      this.logger.error(`Failed to parse file for job ${importJobId}: ${err.message}`);
+      this.logger.error(
+        `Failed to parse file for job ${importJobId}: ${err.message}`,
+      );
       await this.prisma.importJob.update({
         where: { id: importJobId },
         data: { status: ImportStatus.FAILED },

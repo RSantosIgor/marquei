@@ -6,10 +6,7 @@ import { ImportsProcessor } from './imports.processor';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [
-    BullModule.registerQueue({ name: 'imports' }),
-    PrismaModule,
-  ],
+  imports: [BullModule.registerQueue({ name: 'imports' }), PrismaModule],
   controllers: [ImportsController],
   providers: [ImportsService, ImportsProcessor],
 })

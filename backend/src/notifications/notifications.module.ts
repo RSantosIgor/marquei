@@ -6,10 +6,7 @@ import { NotificationsProcessor } from './notifications.processor';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [
-    BullModule.registerQueue({ name: 'notifications' }),
-    PrismaModule,
-  ],
+  imports: [BullModule.registerQueue({ name: 'notifications' }), PrismaModule],
   controllers: [NotificationsController],
   providers: [NotificationsService, NotificationsProcessor],
   exports: [NotificationsService],

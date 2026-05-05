@@ -1,5 +1,10 @@
-import { useState } from 'react'
+"use client"
+
+import * as React from 'react'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -7,24 +12,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
 
 interface DatePickerProps {
   value?: string // YYYY-MM-DD
   onChange: (value: string) => void
   onClear?: () => void
   placeholder?: string
-  minDate?: string // YYYY-MM-DD: disables dates before this
+  minDate?: string // YYYY-MM-DD
   className?: string
   clearable?: boolean
-}
-
-function formatDisplay(dateStr: string) {
-  return new Date(dateStr + 'T12:00:00').toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  })
 }
 
 function toDate(dateStr: string): Date {
@@ -47,7 +43,7 @@ export function DatePicker({
   className,
   clearable = false,
 }: DatePickerProps) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = React.useState(false)
 
   const selected = value ? toDate(value) : undefined
   const disabledMatcher = minDate ? { before: toDate(minDate) } : undefined
@@ -64,11 +60,13 @@ export function DatePicker({
             className,
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? formatDisplay(value) : placeholder}
+          <CalendarIcon />
+          {value
+            ? format(toDate(value), 'dd/MM/yyyy', { locale: ptBR })
+            : <span>{placeholder}</span>}
           {clearable && value && onClear && (
             <X
-              className="ml-auto h-4 w-4 opacity-50 hover:opacity-100"
+              className="ml-auto opacity-50 hover:opacity-100"
               onClick={(e) => {
                 e.stopPropagation()
                 onClear()
@@ -77,12 +75,7 @@ export function DatePicker({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-auto p-0"
-        align="start"
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onInteractOutside={(e) => e.preventDefault()}
-      >
+      <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
           selected={selected}
@@ -93,6 +86,7 @@ export function DatePicker({
             }
           }}
           disabled={disabledMatcher}
+          initialFocus
         />
       </PopoverContent>
     </Popover>

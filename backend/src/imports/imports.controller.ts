@@ -24,14 +24,22 @@ export class ImportsController {
     FileInterceptor('file', {
       limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
       fileFilter: (_req, file, cb) => {
-        const allowed = ['text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+        const allowed = [
+          'text/csv',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ];
         const extOk =
           file.originalname.endsWith('.csv') ||
           file.originalname.endsWith('.xlsx');
         if (allowed.includes(file.mimetype) || extOk) {
           cb(null, true);
         } else {
-          cb(new BadRequestException('Apenas arquivos CSV ou XLSX são permitidos'), false);
+          cb(
+            new BadRequestException(
+              'Apenas arquivos CSV ou XLSX são permitidos',
+            ),
+            false,
+          );
         }
       },
     }),

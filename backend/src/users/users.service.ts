@@ -26,7 +26,12 @@ export class UsersService {
     });
   }
 
-  async createClient(data: { email: string; password: string; name: string; phone?: string }) {
+  async createClient(data: {
+    email: string;
+    password: string;
+    name: string;
+    phone?: string;
+  }) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     return this.prisma.$transaction(async (tx) => {

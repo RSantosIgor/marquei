@@ -36,9 +36,7 @@ export class AppointmentsController {
 
   @Get('professionals')
   @Roles(Role.CLIENT)
-  async getProfessionalsForService(
-    @Query('serviceId') serviceId: string,
-  ) {
+  async getProfessionalsForService(@Query('serviceId') serviceId: string) {
     return this.appointmentsService.getProfessionalsForService(serviceId);
   }
 
@@ -80,10 +78,7 @@ export class AppointmentsController {
 
   @Patch(':id/cancel')
   @Roles(Role.CLIENT)
-  async cancel(
-    @CurrentUser('sub') userId: string,
-    @Param('id') id: string,
-  ) {
+  async cancel(@CurrentUser('sub') userId: string, @Param('id') id: string) {
     const data = await this.appointmentsService.cancel(userId, id);
     return { data };
   }

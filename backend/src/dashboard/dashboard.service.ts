@@ -49,9 +49,7 @@ export class DashboardService {
     // Occupancy by professional
     const occupancyByProfessional = professionals
       .map((pro) => {
-        const proApts = appointments.filter(
-          (a) => a.professionalId === pro.id,
-        );
+        const proApts = appointments.filter((a) => a.professionalId === pro.id);
         return {
           professionalId: pro.id,
           professionalName: pro.user.name,
@@ -62,9 +60,8 @@ export class DashboardService {
           completed: proApts.filter(
             (a) => a.status === AppointmentStatus.COMPLETED,
           ).length,
-          noShow: proApts.filter(
-            (a) => a.status === AppointmentStatus.NO_SHOW,
-          ).length,
+          noShow: proApts.filter((a) => a.status === AppointmentStatus.NO_SHOW)
+            .length,
           cancelled: proApts.filter(
             (a) => a.status === AppointmentStatus.CANCELLED,
           ).length,
@@ -126,7 +123,11 @@ export class DashboardService {
       topServices,
     };
 
-    this.cache = { key: cacheKey, data: stats, expiresAt: Date.now() + this.TTL };
+    this.cache = {
+      key: cacheKey,
+      data: stats,
+      expiresAt: Date.now() + this.TTL,
+    };
     return stats;
   }
 
